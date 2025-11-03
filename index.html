@@ -85,42 +85,6 @@
             border-radius: 4px;
             cursor: pointer;
         }
-
-        /* Toast Notification Styles */
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #f44336;
-            color: white;
-            text-align: center;
-            border-radius: 2px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
-        }
-
-        .toast.show {
-            visibility: visible;
-            animation: fadeInOut 3s;
-        }
-
-        .toast i {
-            margin-left: 10px;
-            font-size: 20px;
-            color: #f39c12; /* Orange color for exclamation mark */
-        }
-
-        /* Fade In and Out Animation */
-        @keyframes fadeInOut {
-            0% {bottom: 0; opacity: 0;}
-            30% {bottom: 30px; opacity: 1;}
-            50% {bottom: 30px; opacity: 1;}
-            100% {bottom: 0; opacity: 0;}
-        }
     </style>
 </head>
 <body>
@@ -155,12 +119,6 @@
                 <button type="submit">ثبت نام</button>
             </form>
         </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast">
-        <span id="toastMessage">پیام خطا به زبان فارسی</span>
-        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <!-- Exclamation Icon -->
     </div>
 
     <script>
@@ -217,12 +175,12 @@
             var passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
 
             if (!email.match(emailPattern)) {
-                showToast("لطفاً ایمیل معتبر وارد کنید.");
+                alert("لطفاً ایمیل معتبر وارد کنید.");
                 return false;
             }
 
             if (!password.match(passwordPattern)) {
-                showToast("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
+                alert("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
                 return false;
             }
             return true;
@@ -237,14 +195,17 @@
             var passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
 
             if (!email.match(emailPattern)) {
-                showToast("لطفاً ایمیل معتبر وارد کنید.");
+                alert("لطفاً ایمیل معتبر وارد کنید.");
                 return false;
             }
 
             if (!password.match(passwordPattern)) {
-                showToast("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
+                alert("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
                 return false;
             }
             return true;
         }
+    </script>
 
+</body>
+</html>
