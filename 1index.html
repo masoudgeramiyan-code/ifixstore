@@ -99,8 +99,8 @@
         <div class="modal-content">
             <span class="close" id="closeLogin">&times;</span>
             <h2>ورود به حساب کاربری</h2>
-            <form id="loginForm" action="https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form" method="POST">
-                <input type="text" name="username" placeholder="نام کاربری" required><br>
+            <form id="loginForm" action="https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form" method="POST" onsubmit="return validateLoginForm()">
+                <input type="email" name="email" placeholder="ایمیل" required><br>
                 <input type="password" name="password" placeholder="رمز عبور" required><br>
                 <button type="submit">ورود</button>
             </form>
@@ -112,7 +112,7 @@
         <div class="modal-content">
             <span class="close" id="closeSignup">&times;</span>
             <h2>ثبت نام</h2>
-            <form id="signupForm" action="https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form" method="POST">
+            <form id="signupForm" action="https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form" method="POST" onsubmit="return validateSignupForm()">
                 <input type="text" name="fullname" placeholder="نام کامل" required><br>
                 <input type="email" name="email" placeholder="ایمیل" required><br>
                 <input type="password" name="password" placeholder="رمز عبور" required><br>
@@ -137,11 +137,13 @@
         // When the user clicks on the "Login" button, open the login modal
         loginBtn.onclick = function() {
             loginModal.style.display = "block";
+            document.getElementById("signupForm").reset(); // Clear signup form
         }
 
         // When the user clicks on the "Signup" button, open the signup modal
         signupBtn.onclick = function() {
             signupModal.style.display = "block";
+            document.getElementById("loginForm").reset(); // Clear login form
         }
 
         // When the user clicks on <span> (x), close the login modal
@@ -162,6 +164,46 @@
             if (event.target == signupModal) {
                 signupModal.style.display = "none";
             }
+        }
+
+        // Validate Email (Login)
+        function validateLoginForm() {
+            var email = document.forms["loginForm"]["email"].value;
+            var password = document.forms["loginForm"]["password"].value;
+
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            var passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
+
+            if (!email.match(emailPattern)) {
+                alert("لطفاً ایمیل معتبر وارد کنید.");
+                return false;
+            }
+
+            if (!password.match(passwordPattern)) {
+                alert("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
+                return false;
+            }
+            return true;
+        }
+
+        // Validate Email and Password (Signup)
+        function validateSignupForm() {
+            var email = document.forms["signupForm"]["email"].value;
+            var password = document.forms["signupForm"]["password"].value;
+
+            var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+            var passwordPattern = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
+
+            if (!email.match(emailPattern)) {
+                alert("لطفاً ایمیل معتبر وارد کنید.");
+                return false;
+            }
+
+            if (!password.match(passwordPattern)) {
+                alert("رمز عبور باید شامل حروف و اعداد مجاز باشد.");
+                return false;
+            }
+            return true;
         }
     </script>
 
