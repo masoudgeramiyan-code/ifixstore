@@ -44,7 +44,6 @@
     button.btn:active{transform:translateY(1px)}
     .hint{color:var(--muted);font-size:13px;margin-top:6px}
 
-    /* modal */
     .modal {
       display:none;
       position:fixed;
@@ -64,17 +63,16 @@
     }
     .modal-card h2{margin:0 0 10px;font-size:18px}
     .form-row{margin:10px 0}
-    input[type="text"],input[type="email"],input[type="password"]{
+    input[type="text"],input[type="email"],input[type="password"],select{
       width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
     }
-    input[disabled]{opacity:0.6}
+    select{background:#fff}
     .submit{
       margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;
     }
     .note{font-size:13px;color:var(--muted);margin-top:8px}
     .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
 
-    /* toast */
     .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
     .toast{
       min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;
@@ -85,19 +83,12 @@
     .toast .icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
     .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
     .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
-    .toast .icon svg{width:18px;height:18px}
-
-    /* small helper */
-    .muted{color:var(--muted);font-size:13px}
-    @media (max-width:420px){
-      .card{padding:16px}
-    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card" role="main" aria-labelledby="title">
-      <h1 id="title">ورود یا ثبت نام</h1>
+    <div class="card" role="main">
+      <h1>ورود یا ثبت نام</h1>
       <div class="btns">
         <button id="loginBtn" class="btn">ورود</button>
         <button id="signupBtn" class="btn secondary">ثبت نام</button>
@@ -107,231 +98,128 @@
   </div>
 
   <!-- Login Modal -->
-  <div id="loginModal" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-      <button class="close" id="closeLogin" aria-label="بستن">&times;</button>
-      <h2 id="loginTitle">ورود به حساب کاربری</h2>
-
-      <form id="loginForm" autocomplete="on">
-        <!-- hidden form type -->
+  <div id="loginModal" class="modal">
+    <div class="modal-card">
+      <button class="close" id="closeLogin">&times;</button>
+      <h2>ورود به حساب کاربری</h2>
+      <form id="loginForm">
         <input type="hidden" name="formType" value="login">
         <div class="form-row">
-          <input id="loginEmail" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+          <input name="email" type="email" placeholder="ایمیل" required>
         </div>
         <div class="form-row">
-          <input id="loginPassword" name="password" type="password" placeholder="رمز عبور" minlength="6" required
-                 pattern="[A-Za-z0-9!@#$%^&*()_+]{6,}" title="رمز باید حروف/اعداد انگلیسی یا کاراکترهای مجاز باشد (حداقل 6 کاراکتر)">
+          <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
         </div>
-
         <div class="error-text" id="loginError"></div>
-
         <button class="submit" type="submit">ورود</button>
-        <div class="note muted">اگر حساب ندارید، از دکمه ثبت نام استفاده کنید.</div>
       </form>
     </div>
   </div>
 
   <!-- Signup Modal -->
-  <div id="signupModal" class="modal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
-      <button class="close" id="closeSignup" aria-label="بستن">&times;</button>
-      <h2 id="signupTitle">ثبت نام</h2>
-
-      <form id="signupForm" autocomplete="on">
-        <!-- hidden form type -->
+  <div id="signupModal" class="modal">
+    <div class="modal-card">
+      <button class="close" id="closeSignup">&times;</button>
+      <h2>ثبت نام</h2>
+      <form id="signupForm">
         <input type="hidden" name="formType" value="signup">
+        <input type="hidden" name="role" value="manager">
         <div class="form-row">
           <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
         </div>
         <div class="form-row">
-          <input id="signupEmail" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+          <input id="phone" name="phone" type="text" placeholder="شماره تماس" required>
         </div>
         <div class="form-row">
-          <input id="signupPassword" name="password" type="password" placeholder="رمز عبور" minlength="6" required
-                 pattern="[A-Za-z0-9!@#$%^&*()_+]{6,}" title="رمز باید حروف/اعداد انگلیسی یا کاراکترهای مجاز باشد (حداقل 6 کاراکتر)">
+          <input id="business_name" name="business_name" type="text" placeholder="نام کسب و کار" required>
         </div>
-
+        <div class="form-row">
+          <select id="job_type" name="job_type_id" required>
+            <option value="">در حال بارگذاری نوع شغل...</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+        </div>
+        <div class="form-row">
+          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
+        </div>
         <div class="error-text" id="signupError"></div>
-
         <button class="submit" type="submit">ثبت نام</button>
-        <div class="note muted">ایمیل‌های تکراری پذیرفته نمی‌شوند.</div>
       </form>
     </div>
   </div>
 
-  <!-- Toasts -->
-  <div class="toast-wrap" aria-live="polite" aria-atomic="true">
+  <div class="toast-wrap">
     <div id="toast" class="toast"><span class="icon" id="toastIcon"></span><span id="toastText"></span></div>
   </div>
 
   <script>
-    // ---------- CONFIG ----------
-    const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form"; // <-- تأیید کن یا جایگزین کن
+    const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
+    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/job-types";
 
-    // ---------- helpers ----------
-    const $ = (id)=>document.getElementById(id);
+    const $ = id => document.getElementById(id);
     function showToast({type="error", text="", timeout=3500}){
-      const t = $("toast");
-      const icon = $("toastIcon");
-      const txt = $("toastText");
-      t.className = "toast " + (type==="success" ? "success" : "error");
-      txt.textContent = text;
-      icon.innerHTML = type==="success"
-        ? `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        : `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 9v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 17h.01" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.29 3.86L1.82 18.41A2 2 0 0 0 3.6 21h16.8a2 2 0 0 0 1.78-2.59L13.71 3.86a2 2 0 0 0-3.42 0z" fill="#f39c12"/></svg>`;
+      const t=$("toast"),txt=$("toastText");
+      t.className="toast "+(type==="success"?"success":"error");
+      txt.textContent=text;
       t.classList.add("show");
       clearTimeout(t._t);
-      t._t = setTimeout(()=> t.classList.remove("show"), timeout);
+      t._t=setTimeout(()=>t.classList.remove("show"),timeout);
     }
 
-    // ---------- modal logic ----------
-    const loginBtn = $("loginBtn"), signupBtn = $("signupBtn");
-    const loginModal = $("loginModal"), signupModal = $("signupModal");
-    const closeLogin = $("closeLogin"), closeSignup = $("closeSignup");
-    const loginForm = $("loginForm"), signupForm = $("signupForm");
-    const loginError = $("loginError"), signupError = $("signupError");
+    // --- Modal logic ---
+    const loginModal=$("loginModal"),signupModal=$("signupModal");
+    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");loginModal.classList.add("show");};
+    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");signupModal.classList.add("show");};
+    $("closeLogin").onclick=()=>loginModal.classList.remove("show");
+    $("closeSignup").onclick=()=>signupModal.classList.remove("show");
+    window.onclick=(e)=>{if(e.target===loginModal)loginModal.classList.remove("show");if(e.target===signupModal)signupModal.classList.remove("show");};
 
-    function openLogin(){
-      signupModal.classList.remove("show");
-      signupModal.setAttribute("aria-hidden","true");
-      signupForm.reset();
-      loginModal.classList.add("show");
-      loginModal.setAttribute("aria-hidden","false");
-      setTimeout(()=> $("loginEmail").focus(),80);
-    }
-    function openSignup(){
-      loginModal.classList.remove("show");
-      loginModal.setAttribute("aria-hidden","true");
-      loginForm.reset();
-      signupModal.classList.add("show");
-      signupModal.setAttribute("aria-hidden","false");
-      setTimeout(()=> $("fullname").focus(),80);
-    }
-    loginBtn.addEventListener("click", openLogin);
-    signupBtn.addEventListener("click", openSignup);
-    closeLogin.addEventListener("click", ()=> { loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); });
-    closeSignup.addEventListener("click", ()=> { signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); });
-    window.addEventListener("click",(e)=>{
-      if(e.target===loginModal){ loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); }
-      if(e.target===signupModal){ signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); }
-    });
-
-    // ---------- sanitize password input: remove persian chars on input ----------
-    function sanitizePwdInput(evt){
-      const el = evt.target;
-      // allow only ASCII letters, digits and limited punctuation
-      const allowed = /[A-Za-z0-9!@#$%^&*()_+]/g;
-      const filtered = (el.value.match(allowed) || []).join('');
-      if(filtered !== el.value) el.value = filtered;
-    }
-    $("loginPassword").addEventListener("input", sanitizePwdInput);
-    $("signupPassword").addEventListener("input", sanitizePwdInput);
-
-    // ---------- common validation ----------
-    function validateEmail(email){
-      // stricter ascii email check
-      const re = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-      return re.test(email);
-    }
-    function validatePassword(pwd){
-      const re = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
-      return re.test(pwd);
-    }
-
-    // ---------- handle submit via fetch (prevents page reload) ----------
-    async function submitFormAsJson(formElement, onSuccess, onError){
-      // gather
-      const fm = new FormData(formElement);
-      // send as form-encoded (server expects form POST)
-      try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          body: fm,
-          redirect: "manual"
-        });
-        // try parse as json
-        let data;
-        try { data = await res.json(); } catch(e){ data = { status: res.ok ? "ok" : "error", message: res.statusText || "پاسخ نامشخص از سرور" }; }
-        if(!res.ok){
-          // pass the status/message to onError
-          onError?.(data);
+    // --- Fetch job types from n8n ---
+    async function loadJobTypes(){
+      const select=$("job_type");
+      try{
+        const res=await fetch(JOB_LIST_URL);
+        const data=await res.json();
+        select.innerHTML="";
+        if(data && Array.isArray(data)){
+          data.forEach(job=>{
+            const opt=document.createElement("option");
+            opt.value=job.id;
+            opt.textContent=job.title || job.name;
+            select.appendChild(opt);
+          });
         } else {
-          onSuccess?.(data);
+          select.innerHTML='<option value="">لیست خالی است</option>';
         }
-      } catch(err){
-        onError?.({ status: "error", message: "خطا در ارتباط با سرور. لطفا اتصال خود را بررسی کنید." });
+      }catch(e){
+        select.innerHTML='<option value="">خطا در بارگذاری</option>';
+      }
+    }
+    loadJobTypes();
+
+    // --- Handle submit ---
+    async function submitForm(form){
+      const fm=new FormData(form);
+      try{
+        const res=await fetch(WEBHOOK_URL,{method:"POST",body:fm});
+        const data=await res.json();
+        if(res.ok){
+          showToast({type:"success",text:data.message||"عملیات موفق!"});
+          form.reset();
+          signupModal.classList.remove("show");
+          loginModal.classList.remove("show");
+        }else{
+          showToast({text:data.message||"خطا در انجام عملیات"});
+        }
+      }catch(err){
+        showToast({text:"خطا در ارتباط با سرور"});
       }
     }
 
-    // ---------- login logic ----------
-    loginForm.addEventListener("submit", function(e){
-      e.preventDefault();
-      loginError.style.display="none"; loginError.textContent="";
-      const email = loginForm.email.value.trim();
-      const password = loginForm.password.value;
-
-      if(!validateEmail(email)){ showToast({type:"error", text:"ایمیل نامعتبر است — از حروف انگلیسی استفاده کنید."}); return; }
-      if(!validatePassword(password)){ showToast({type:"error", text:"رمز عبور نامعتبر است — حداقل 6 نویسه و بدون حروف فارسی."}); return; }
-
-      // first: check existence via n8n workflow (we'll call webhook and backend will branch based on formType)
-      // submit
-      submitFormAsJson(loginForm,
-        (data)=>{
-          // success path
-          // expecting server to return { status: "success", message: "..."} or similar
-          const msg = data?.message || "ورود با موفقیت انجام شد.";
-          showToast({type:"success", text:msg});
-          loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true");
-        },
-        (errData)=>{
-          // handle error object: server might return info with errorDescription / rawErrorMessage
-          // prioritize readable message
-          const serverMsg = errData?.message || errData?.errorDescription || (typeof errData === "string" ? errData : null);
-          // Example: duplicate key ... (shouldn't normally happen on login) or custom invalid credentials
-          if(serverMsg && serverMsg.toLowerCase().includes("duplicate")) {
-            showToast({type:"error", text:"خطا: این ایمیل قبلاً ثبت شده است (درخواست ورود نباید ایمیل جدید ثبت کند)."});
-          } else {
-            // generic: try to show Persian message expected for login failures
-            showToast({type:"error", text: (serverMsg && serverMsg.length<200) ? serverMsg : "ورود ناموفق — ایمیل یا رمز عبور اشتباه است."});
-          }
-        }
-      );
-    });
-
-    // ---------- signup logic ----------
-    signupForm.addEventListener("submit", function(e){
-      e.preventDefault();
-      signupError.style.display="none"; signupError.textContent="";
-      const fullname = signupForm.fullname.value.trim();
-      const email = signupForm.email.value.trim();
-      const password = signupForm.password.value;
-
-      if(fullname.length < 2){ showToast({type:"error", text:"نام کامل کوتاه است."}); return; }
-      if(!validateEmail(email)){ showToast({type:"error", text:"ایمیل نامعتبر است — از حروف انگلیسی استفاده کنید."}); return; }
-      if(!validatePassword(password)){ showToast({type:"error", text:"رمز عبور نامعتبر است — حداقل 6 نویسه و بدون حروف فارسی."}); return; }
-
-      submitFormAsJson(signupForm,
-        (data)=>{
-          const msg = data?.message || "ثبت‌نام با موفقیت انجام شد.";
-          showToast({type:"success", text:msg});
-          signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true");
-        },
-        (errData)=>{
-          // server gave error, possibly duplicate email
-          const serverMsg = errData?.message || errData?.errorDescription || (typeof errData === "string" ? errData : null);
-          if(serverMsg && serverMsg.toLowerCase().includes("duplicate")){
-            // duplicate -> show friendly Persian message
-            showToast({type:"error", text:"ایمیل وارد شده قبلاً ثبت شده است. اگر حساب دارید از ورود استفاده کنید."});
-          } else {
-            showToast({type:"error", text: serverMsg && serverMsg.length<200 ? serverMsg : "خطا در ثبت‌نام — دوباره تلاش کنید."});
-          }
-        }
-      );
-    });
-
-    // ---------- extra UX: Enter key binding (optional) ----------
-    // Already forms handle submit via button/enter.
-
+    $("loginForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
+    $("signupForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
   </script>
 </body>
 </html>
