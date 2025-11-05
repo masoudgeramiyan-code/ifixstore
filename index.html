@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ورود و ثبت‌نام</title>
+  <title>ثبت‌نام کاربر</title>
   <style>
     body {
       font-family: sans-serif;
-      background: #f4f6f8;
+      background: #f8f9fa;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
+      direction: rtl;
     }
-    .container {
-      background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-      padding: 30px;
-      width: 340px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
     }
     label {
       display: block;
@@ -49,147 +45,126 @@
       font-size: 15px;
     }
     button:hover { background: #0056b3; }
-    .switch {
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    .switch a {
-      color: #007bff;
-      cursor: pointer;
-    }
     .error {
       color: red;
       font-size: 13px;
       margin-top: 3px;
     }
-    #loginForm { display: none; }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <!-- ثبت نام -->
-    <form id="signupForm">
-      <h2>ثبت‌نام</h2>
+  <form id="signupForm">
+    <h3 style="text-align:center;">فرم ثبت‌نام</h3>
 
-      <label for="fullname">نام کامل:</label>
-      <input type="text" id="fullname" placeholder="مثلاً: مسعود گرامیان" required>
-      <div id="fullnameError" class="error"></div>
+    <label for="fullname">نام کامل:</label>
+    <input type="text" id="fullname" name="fullname" placeholder="مثلاً: مسعود گرامیان" required>
+    <div id="fullnameError" class="error"></div>
 
-      <label for="businessname">نام کسب‌وکار:</label>
-      <input type="text" id="businessname" placeholder="مثلاً: فیکس‌استور" required>
-      <div id="businessnameError" class="error"></div>
+    <label for="businessname">نام کسب‌وکار:</label>
+    <input type="text" id="businessname" name="businessname" placeholder="مثلاً: فیکس‌استور" required>
+    <div id="businessnameError" class="error"></div>
 
-      <label for="phone">شماره تماس:</label>
-      <input type="text" id="phone" placeholder="مثلاً: 09123456789" required>
-      <div id="phoneError" class="error"></div>
+    <label for="phone">شماره تماس:</label>
+    <input type="text" id="phone" name="phone" placeholder="مثلاً: 09123456789" required>
+    <div id="phoneError" class="error"></div>
 
-      <label for="email">ایمیل:</label>
-      <input type="email" id="email" placeholder="example@email.com" required>
-      <div id="emailError" class="error"></div>
+    <label for="email">ایمیل:</label>
+    <input type="email" id="email" name="email" placeholder="example@email.com" required>
+    <div id="emailError" class="error"></div>
 
-      <label for="password">رمز عبور:</label>
-      <input type="password" id="password" placeholder="حداقل ۸ کاراکتر" required>
-      <div id="passwordError" class="error"></div>
+    <label for="password">رمز عبور:</label>
+    <input type="password" id="password" name="password" placeholder="حداقل ۸ کاراکتر" required>
+    <div id="passwordError" class="error"></div>
 
-      <button type="submit">ثبت‌نام</button>
-      <div class="switch">قبلاً ثبت‌نام کردی؟ <a id="showLogin">ورود</a></div>
-    </form>
-
-    <!-- ورود -->
-    <form id="loginForm">
-      <h2>ورود</h2>
-
-      <label for="loginEmail">ایمیل:</label>
-      <input type="email" id="loginEmail" placeholder="example@email.com" required>
-      <div id="loginEmailError" class="error"></div>
-
-      <label for="loginPassword">رمز عبور:</label>
-      <input type="password" id="loginPassword" placeholder="رمز عبور" required>
-      <div id="loginPasswordError" class="error"></div>
-
-      <button type="submit">ورود</button>
-      <div class="switch">حساب نداری؟ <a id="showSignup">ثبت‌نام</a></div>
-    </form>
-  </div>
+    <button type="submit">ثبت‌نام</button>
+  </form>
 
   <script>
-    const fullnameRegex = /^[\u0600-\u06FF\s]+$/;
-    const businessRegex = /^[\u0600-\u06FF\s]+$/;
-    const phoneRegex = /^[0-9]+$/;
+    const fullnameRegex = /^[\u0600-\u06FF\s]+$/; // فقط حروف فارسی
+    const businessRegex = /^[\u0600-\u06FF\s]+$/; // فقط فارسی
+    const phoneRegex = /^[0-9]+$/; // فقط اعداد انگلیسی
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const passwordRegex = /^[A-Za-z0-9@._!#$%&*+-]+$/;
+    const passwordRegex = /^[A-Za-z0-9@._!#$%&*+-]+$/; // فقط کاراکترهای مجاز انگلیسی
 
-    // فرم‌ها
-    const signupForm = document.getElementById("signupForm");
-    const loginForm = document.getElementById("loginForm");
-    document.getElementById("showLogin").onclick = () => {
-      signupForm.style.display = "none";
-      loginForm.style.display = "block";
-    };
-    document.getElementById("showSignup").onclick = () => {
-      signupForm.style.display = "block";
-      loginForm.style.display = "none";
-    };
+    // کنترل لحظه‌ای ورودی‌ها
+    document.getElementById("fullname").addEventListener("input", function() {
+      this.value = this.value.replace(/[^آ-ی\s]/g, "");
+    });
+    document.getElementById("businessname").addEventListener("input", function() {
+      this.value = this.value.replace(/[^آ-ی\s]/g, "");
+    });
+    document.getElementById("phone").addEventListener("input", function() {
+      this.value = this.value.replace(/[^0-9]/g, "");
+    });
+    document.getElementById("password").addEventListener("input", function() {
+      this.value = this.value.replace(/[^\x00-\x7F]/g, ""); // حذف حروف فارسی
+    });
 
-    // کنترل ورودی‌های فارسی/انگلیسی
-    document.getElementById("fullname").addEventListener("input", e => e.target.value = e.target.value.replace(/[^آ-ی\s]/g, ""));
-    document.getElementById("businessname").addEventListener("input", e => e.target.value = e.target.value.replace(/[^آ-ی\s]/g, ""));
-    document.getElementById("phone").addEventListener("input", e => e.target.value = e.target.value.replace(/[^0-9]/g, ""));
-    document.getElementById("password").addEventListener("input", e => e.target.value = e.target.value.replace(/[^\x00-\x7F]/g, ""));
-    document.getElementById("loginPassword").addEventListener("input", e => e.target.value = e.target.value.replace(/[^\x00-\x7F]/g, ""));
-
-    // ثبت نام
-    signupForm.addEventListener("submit", e => {
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      document.querySelectorAll(".error").forEach(e => e.textContent = "");
+
+      let valid = true;
+
       const fullname = document.getElementById("fullname").value.trim();
       const businessname = document.getElementById("businessname").value.trim();
       const phone = document.getElementById("phone").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
 
-      let valid = true;
-      if (!fullnameRegex.test(fullname)) { fullnameError.textContent = "فقط حروف فارسی مجاز است."; valid = false; }
-      if (!businessRegex.test(businessname)) { businessnameError.textContent = "فقط حروف فارسی مجاز است."; valid = false; }
-      if (!phoneRegex.test(phone)) { phoneError.textContent = "فقط اعداد انگلیسی مجاز است."; valid = false; }
-      if (!emailRegex.test(email)) { emailError.textContent = "ایمیل معتبر نیست."; valid = false; }
-      if (!passwordRegex.test(password) || password.length < 8) { passwordError.textContent = "رمز عبور باید حداقل ۸ کاراکتر و فقط شامل حروف و اعداد انگلیسی باشد."; valid = false; }
+      // پاک‌کردن پیام‌های خطا
+      document.querySelectorAll(".error").forEach(e => e.textContent = "");
+
+      // بررسی نام کامل
+      if (!fullnameRegex.test(fullname)) {
+        document.getElementById("fullnameError").textContent = "فقط حروف فارسی مجاز است.";
+        valid = false;
+      }
+
+      // بررسی نام کسب‌وکار
+      if (!businessRegex.test(businessname)) {
+        document.getElementById("businessnameError").textContent = "فقط حروف فارسی مجاز است.";
+        valid = false;
+      }
+
+      // بررسی شماره تماس
+      if (!phoneRegex.test(phone)) {
+        document.getElementById("phoneError").textContent = "فقط اعداد انگلیسی مجاز است.";
+        valid = false;
+      }
+
+      // بررسی ایمیل
+      if (!emailRegex.test(email)) {
+        document.getElementById("emailError").textContent = "ایمیل معتبر نیست.";
+        valid = false;
+      }
+
+      // بررسی پسورد
+      if (!passwordRegex.test(password) || password.length < 8) {
+        document.getElementById("passwordError").textContent = "رمز عبور باید حداقل ۸ کاراکتر و فقط شامل حروف و اعداد انگلیسی باشد.";
+        valid = false;
+      }
 
       if (!valid) return;
 
-      fetch("https://https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form", {
+      // اگر همه‌چیز درست بود، می‌فرستیم به n8n
+      const formData = {
+        fullname,
+        businessname,
+        phone,
+        email,
+        password,
+        formType: "signup"
+      };
+
+      fetch("https://YOUR_WEBHOOK_URL_HERE", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullname, businessname, phone, email, password, formType: "signup" })
+        body: JSON.stringify(formData)
       })
       .then(res => res.json())
-      .then(() => alert("ثبت‌نام با موفقیت انجام شد!"))
-      .catch(() => alert("خطا در ارسال اطلاعات!"));
-    });
-
-    // ورود
-    loginForm.addEventListener("submit", e => {
-      e.preventDefault();
-      loginEmailError.textContent = "";
-      loginPasswordError.textContent = "";
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
-
-      let valid = true;
-      if (!emailRegex.test(email)) { loginEmailError.textContent = "ایمیل معتبر نیست."; valid = false; }
-      if (!passwordRegex.test(password)) { loginPasswordError.textContent = "رمز عبور فقط باید شامل حروف و اعداد انگلیسی باشد."; valid = false; }
-      if (!valid) return;
-
-      fetch("https://https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, formType: "login" })
-      })
-      .then(res => res.json())
-      .then(() => alert("ورود موفقیت‌آمیز بود!"))
-      .catch(() => alert("خطا در ورود!"));
+      .then(data => alert("ثبت‌نام با موفقیت انجام شد!"))
+      .catch(err => alert("خطا در ارسال اطلاعات!"));
     });
   </script>
 
