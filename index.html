@@ -1,225 +1,197 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ورود / ثبت نام</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود و ثبت‌نام</title>
   <style>
-    :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --accent:#4CAF50;
-      --accent-2:#45a049;
-      --muted:#6b7280;
-      --danger:#f44336;
-      --orange:#f39c12;
-      --success:#2d9c3a;
-      --radius:10px;
-      --shadow: 0 6px 18px rgba(20,20,30,0.08);
-      font-family: "Vazirmatn", Arial, sans-serif;
+    body {
+      font-family: sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    html,body{height:100%;margin:0;background:var(--bg);direction:rtl}
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      width: 340px;
     }
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      box-shadow:var(--shadow);
-      padding:28px;
-      width:380px;
-      max-width:95%;
-      text-align:center;
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
     }
-    h1{margin:0 0 12px;font-size:20px}
-    .btns{display:flex;gap:12px;justify-content:center;margin:14px 0 6px}
-    button.btn{
-      flex:1;padding:10px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
     }
-    button.btn.secondary{background:#0ea5a5}
-    button.btn:active{transform:translateY(1px)}
-    .hint{color:var(--muted);font-size:13px;margin-top:6px}
-
-    .modal {
-      display:none;
-      position:fixed;
-      z-index:1200;
-      left:0;top:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.35);
-      align-items:center;
-      justify-content:center;
-      padding:20px;
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
-    .modal.show{display:flex}
-    .modal-card{
-      width:100%;max-width:420px;background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
     }
-    .modal .close{
-      position:absolute;left:14px;top:10px;color:#999;font-size:22px;border:none;background:transparent;cursor:pointer
+    button:hover { background: #0056b3; }
+    .switch {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
     }
-    .modal-card h2{margin:0 0 10px;font-size:18px}
-    .form-row{margin:10px 0}
-    input[type="text"],input[type="email"],input[type="password"],select{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
+    .switch a {
+      color: #007bff;
+      cursor: pointer;
     }
-    select{background:#fff}
-    .submit{
-      margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;
+    .error {
+      color: red;
+      font-size: 13px;
+      margin-top: 3px;
     }
-    .note{font-size:13px;color:var(--muted);margin-top:8px}
-    .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
-
-    .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
-    .toast{
-      min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.12);font-weight:600;font-size:14px;
-      opacity:0;pointer-events:none;transition:all .28s ease;
-    }
-    .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
-    .toast .icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
-    .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
-    .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
+    #loginForm { display: none; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="main">
-      <h1>ورود یا ثبت نام</h1>
-      <div class="btns">
-        <button id="loginBtn" class="btn">ورود</button>
-        <button id="signupBtn" class="btn secondary">ثبت نام</button>
-      </div>
-      <div class="hint">از دکمه‌ها استفاده کنید تا فرم مناسب باز شود.</div>
-    </div>
-  </div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeLogin">&times;</button>
-      <h2>ورود به حساب کاربری</h2>
-      <form id="loginForm">
-        <input type="hidden" name="formType" value="login">
-        <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل" required>
-        </div>
-        <div class="form-row">
-          <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
-        </div>
-        <div class="error-text" id="loginError"></div>
-        <button class="submit" type="submit">ورود</button>
-      </form>
-    </div>
-  </div>
+  <div class="container">
+    <!-- ثبت نام -->
+    <form id="signupForm">
+      <h2>ثبت‌نام</h2>
 
-  <!-- Signup Modal -->
-  <div id="signupModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeSignup">&times;</button>
-      <h2>ثبت نام</h2>
-      <form id="signupForm">
-        <input type="hidden" name="formType" value="signup">
-        <input type="hidden" name="role" value="manager">
-        <div class="form-row">
-          <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
-        </div>
-        <div class="form-row">
-          <input id="phone" name="phone" type="text" placeholder="شماره تماس" required>
-        </div>
-        <div class="form-row">
-          <input id="business_name" name="business_name" type="text" placeholder="نام کسب و کار" required>
-        </div>
-        <div class="form-row">
-          <select id="job_type" name="job_type_id" required>
-            <option value="">در حال بارگذاری نوع شغل...</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
-        </div>
-        <div class="form-row">
-          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
-        </div>
-        <div class="error-text" id="signupError"></div>
-        <button class="submit" type="submit">ثبت نام</button>
-      </form>
-    </div>
-  </div>
+      <label for="fullname">نام کامل:</label>
+      <input type="text" id="fullname" placeholder="مثلاً: مسعود گرامیان" required>
+      <div id="fullnameError" class="error"></div>
 
-  <div class="toast-wrap">
-    <div id="toast" class="toast"><span class="icon" id="toastIcon"></span><span id="toastText"></span></div>
+      <label for="businessname">نام کسب‌وکار:</label>
+      <input type="text" id="businessname" placeholder="مثلاً: فیکس‌استور" required>
+      <div id="businessnameError" class="error"></div>
+
+      <label for="phone">شماره تماس:</label>
+      <input type="text" id="phone" placeholder="مثلاً: 09123456789" required>
+      <div id="phoneError" class="error"></div>
+
+      <label for="email">ایمیل:</label>
+      <input type="email" id="email" placeholder="example@email.com" required>
+      <div id="emailError" class="error"></div>
+
+      <label for="password">رمز عبور:</label>
+      <input type="password" id="password" placeholder="حداقل ۸ کاراکتر" required>
+      <div id="passwordError" class="error"></div>
+
+      <button type="submit">ثبت‌نام</button>
+      <div class="switch">قبلاً ثبت‌نام کردی؟ <a id="showLogin">ورود</a></div>
+    </form>
+
+    <!-- ورود -->
+    <form id="loginForm">
+      <h2>ورود</h2>
+
+      <label for="loginEmail">ایمیل:</label>
+      <input type="email" id="loginEmail" placeholder="example@email.com" required>
+      <div id="loginEmailError" class="error"></div>
+
+      <label for="loginPassword">رمز عبور:</label>
+      <input type="password" id="loginPassword" placeholder="رمز عبور" required>
+      <div id="loginPasswordError" class="error"></div>
+
+      <button type="submit">ورود</button>
+      <div class="switch">حساب نداری؟ <a id="showSignup">ثبت‌نام</a></div>
+    </form>
   </div>
 
   <script>
-    const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/job-types";
+    const fullnameRegex = /^[\u0600-\u06FF\s]+$/;
+    const businessRegex = /^[\u0600-\u06FF\s]+$/;
+    const phoneRegex = /^[0-9]+$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const passwordRegex = /^[A-Za-z0-9@._!#$%&*+-]+$/;
 
-    const $ = id => document.getElementById(id);
-    function showToast({type="error", text="", timeout=3500}){
-      const t=$("toast"),txt=$("toastText");
-      t.className="toast "+(type==="success"?"success":"error");
-      txt.textContent=text;
-      t.classList.add("show");
-      clearTimeout(t._t);
-      t._t=setTimeout(()=>t.classList.remove("show"),timeout);
-    }
+    // فرم‌ها
+    const signupForm = document.getElementById("signupForm");
+    const loginForm = document.getElementById("loginForm");
+    document.getElementById("showLogin").onclick = () => {
+      signupForm.style.display = "none";
+      loginForm.style.display = "block";
+    };
+    document.getElementById("showSignup").onclick = () => {
+      signupForm.style.display = "block";
+      loginForm.style.display = "none";
+    };
 
-    // --- Modal logic ---
-    const loginModal=$("loginModal"),signupModal=$("signupModal");
-    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");loginModal.classList.add("show");};
-    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");signupModal.classList.add("show");};
-    $("closeLogin").onclick=()=>loginModal.classList.remove("show");
-    $("closeSignup").onclick=()=>signupModal.classList.remove("show");
-    window.onclick=(e)=>{if(e.target===loginModal)loginModal.classList.remove("show");if(e.target===signupModal)signupModal.classList.remove("show");};
+    // کنترل ورودی‌های فارسی/انگلیسی
+    document.getElementById("fullname").addEventListener("input", e => e.target.value = e.target.value.replace(/[^آ-ی\s]/g, ""));
+    document.getElementById("businessname").addEventListener("input", e => e.target.value = e.target.value.replace(/[^آ-ی\s]/g, ""));
+    document.getElementById("phone").addEventListener("input", e => e.target.value = e.target.value.replace(/[^0-9]/g, ""));
+    document.getElementById("password").addEventListener("input", e => e.target.value = e.target.value.replace(/[^\x00-\x7F]/g, ""));
+    document.getElementById("loginPassword").addEventListener("input", e => e.target.value = e.target.value.replace(/[^\x00-\x7F]/g, ""));
 
-    // --- Fetch job types from n8n ---
-    async function loadJobTypes(){
-      const select=$("job_type");
-      try{
-        const res=await fetch(JOB_LIST_URL);
-        const data=await res.json();
-        select.innerHTML="";
-        if(data && Array.isArray(data)){
-          data.forEach(job=>{
-            const opt=document.createElement("option");
-            opt.value=job.id;
-            opt.textContent=job.title || job.name;
-            select.appendChild(opt);
-          });
-        } else {
-          select.innerHTML='<option value="">لیست خالی است</option>';
-        }
-      }catch(e){
-        select.innerHTML='<option value="">خطا در بارگذاری</option>';
-      }
-    }
-    loadJobTypes();
+    // ثبت نام
+    signupForm.addEventListener("submit", e => {
+      e.preventDefault();
+      document.querySelectorAll(".error").forEach(e => e.textContent = "");
+      const fullname = document.getElementById("fullname").value.trim();
+      const businessname = document.getElementById("businessname").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-    // --- Handle submit ---
-    async function submitForm(form){
-      const fm=new FormData(form);
-      try{
-        const res=await fetch(WEBHOOK_URL,{method:"POST",body:fm});
-        const data=await res.json();
-        if(res.ok){
-          showToast({type:"success",text:data.message||"عملیات موفق!"});
-          form.reset();
-          signupModal.classList.remove("show");
-          loginModal.classList.remove("show");
-        }else{
-          showToast({text:data.message||"خطا در انجام عملیات"});
-        }
-      }catch(err){
-        showToast({text:"خطا در ارتباط با سرور"});
-      }
-    }
+      let valid = true;
+      if (!fullnameRegex.test(fullname)) { fullnameError.textContent = "فقط حروف فارسی مجاز است."; valid = false; }
+      if (!businessRegex.test(businessname)) { businessnameError.textContent = "فقط حروف فارسی مجاز است."; valid = false; }
+      if (!phoneRegex.test(phone)) { phoneError.textContent = "فقط اعداد انگلیسی مجاز است."; valid = false; }
+      if (!emailRegex.test(email)) { emailError.textContent = "ایمیل معتبر نیست."; valid = false; }
+      if (!passwordRegex.test(password) || password.length < 8) { passwordError.textContent = "رمز عبور باید حداقل ۸ کاراکتر و فقط شامل حروف و اعداد انگلیسی باشد."; valid = false; }
 
-    $("loginForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
-    $("signupForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
+      if (!valid) return;
+
+      fetch("https://https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullname, businessname, phone, email, password, formType: "signup" })
+      })
+      .then(res => res.json())
+      .then(() => alert("ثبت‌نام با موفقیت انجام شد!"))
+      .catch(() => alert("خطا در ارسال اطلاعات!"));
+    });
+
+    // ورود
+    loginForm.addEventListener("submit", e => {
+      e.preventDefault();
+      loginEmailError.textContent = "";
+      loginPasswordError.textContent = "";
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      let valid = true;
+      if (!emailRegex.test(email)) { loginEmailError.textContent = "ایمیل معتبر نیست."; valid = false; }
+      if (!passwordRegex.test(password)) { loginPasswordError.textContent = "رمز عبور فقط باید شامل حروف و اعداد انگلیسی باشد."; valid = false; }
+      if (!valid) return;
+
+      fetch("https://https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, formType: "login" })
+      })
+      .then(res => res.json())
+      .then(() => alert("ورود موفقیت‌آمیز بود!"))
+      .catch(() => alert("خطا در ورود!"));
+    });
   </script>
+
 </body>
 </html>
