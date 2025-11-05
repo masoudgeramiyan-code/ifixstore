@@ -97,6 +97,7 @@
 <body>
   <div class="wrap">
     <div class="card" role="main" aria-labelledby="title">
+      <h1 id="title">ورود یا ثبت نام — FixStore</h1>
       <h1 id="title">ورود یا ثبت نام</h1>
       <div class="btns">
         <button id="loginBtn" class="btn">ورود</button>
@@ -255,148 +256,8 @@
         if(!res.ok){
           // pass the status/message to onError
           onError?.(data);
-<script>
-  // ---------- CONFIG ----------
-  const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form"; // <-- تأیید کن یا جایگزین کن
-
-  // ---------- helpers ----------
-  const $ = (id)=>document.getElementById(id);
-  function showToast({type="error", text="", timeout=3500}){
-    const t = $("toast");
-    const icon = $("toastIcon");
-    const txt = $("toastText");
-    t.className = "toast " + (type==="success" ? "success" : "error");
-    txt.textContent = text;
-    icon.innerHTML = type==="success"
-      ? `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-      : `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 9v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 17h.01" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.29 3.86L1.82 18.41A2 2 0 0 0 3.6 21h16.8a2 2 0 0 0 1.78-2.59L13.71 3.86a2 2 0 0 0-3.42 0z" fill="#f39c12"/></svg>`;
-    t.classList.add("show");
-    clearTimeout(t._t);
-    t._t = setTimeout(()=> t.classList.remove("show"), timeout);
-  }
-
-  // ---------- modal logic ----------
-  const loginBtn = $("loginBtn"), signupBtn = $("signupBtn");
-  const loginModal = $("loginModal"), signupModal = $("signupModal");
-  const closeLogin = $("closeLogin"), closeSignup = $("closeSignup");
-  const loginForm = $("loginForm"), signupForm = $("signupForm");
-  const loginError = $("loginError"), signupError = $("signupError");
-
-  function openLogin(){
-    signupModal.classList.remove("show");
-    signupModal.setAttribute("aria-hidden","true");
-    signupForm.reset();
-    loginModal.classList.add("show");
-    loginModal.setAttribute("aria-hidden","false");
-    setTimeout(()=> $("loginEmail").focus(),80);
-  }
-  function openSignup(){
-    loginModal.classList.remove("show");
-    loginModal.setAttribute("aria-hidden","true");
-    loginForm.reset();
-    signupModal.classList.add("show");
-    signupModal.setAttribute("aria-hidden","false");
-    setTimeout(()=> $("fullname").focus(),80);
-  }
-  loginBtn.addEventListener("click", openLogin);
-  signupBtn.addEventListener("click", openSignup);
-  closeLogin.addEventListener("click", ()=> { loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); });
-  closeSignup.addEventListener("click", ()=> { signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); });
-  window.addEventListener("click",(e)=>{
-    if(e.target===loginModal){ loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); }
-    if(e.target===signupModal){ signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); }
-  });
-
-  // ---------- sanitize password input ----------
-  function sanitizePwdInput(evt){
-    const el = evt.target;
-    const allowed = /[A-Za-z0-9!@#$%^&*()_+]/g;
-    const filtered = (el.value.match(allowed) || []).join('');
-    if(filtered !== el.value) el.value = filtered;
-  }
-  $("loginPassword").addEventListener("input", sanitizePwdInput);
-  $("signupPassword").addEventListener("input", sanitizePwdInput);
-
-  // ---------- validation ----------
-  function validateEmail(email){
-    const re = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    return re.test(email);
-  }
-  function validatePassword(pwd){
-    const re = /^[A-Za-z0-9!@#$%^&*()_+]{6,}$/;
-    return re.test(pwd);
-  }
-
-  // ---------- submit helper ----------
-  async function submitFormAsJson(formElement, onSuccess, onError){
-    const fm = new FormData(formElement);
-    try {
-      const res = await fetch(WEBHOOK_URL, { method: "POST", body: fm });
-      let data;
-      try { data = await res.json(); } 
-      catch(e){ data = { status: res.ok ? "ok" : "error", message: res.statusText || "پاسخ نامشخص از سرور" }; }
-      if(!res.ok){ onError?.(data); }
-      else { onSuccess?.(data); }
-    } catch(err){
-      onError?.({ status: "error", message: "خطا در ارتباط با سرور. لطفا اتصال خود را بررسی کنید." });
-    }
-  }
-
-  // ---------- login ----------
-  loginForm.addEventListener("submit", function(e){
-    e.preventDefault();
-    loginError.style.display="none"; loginError.textContent="";
-    const email = loginForm.email.value.trim();
-    const password = loginForm.password.value;
-
-    if(!validateEmail(email)){ showToast({type:"error", text:"ایمیل نامعتبر است"}); return; }
-    if(!validatePassword(password)){ showToast({type:"error", text:"رمز عبور نامعتبر است"}); return; }
-
-    submitFormAsJson(loginForm,
-      (data)=>{
-        const msg = data?.message || "ورود با موفقیت انجام شد.";
-        showToast({type:"success", text:msg});
-        loginModal.classList.remove("show");
-        loginModal.setAttribute("aria-hidden","true");
-      },
-      (errData)=>{
-        const serverMsg = errData?.message || errData?.errorDescription || "ورود ناموفق — ایمیل یا رمز اشتباه است.";
-        showToast({type:"error", text:serverMsg});
-      }
-    );
-  });
-
-  // ---------- signup ----------
-  signupForm.addEventListener("submit", function(e){
-    e.preventDefault();
-    signupError.style.display="none"; signupError.textContent="";
-    const fullname = signupForm.fullname.value.trim();
-    const email = signupForm.email.value.trim();
-    const password = signupForm.password.value;
-
-    if(fullname.length < 2){ showToast({type:"error", text:"نام کامل کوتاه است."}); return; }
-    if(!validateEmail(email)){ showToast({type:"error", text:"ایمیل نامعتبر است"}); return; }
-    if(!validatePassword(password)){ showToast({type:"error", text:"رمز عبور نامعتبر است"}); return; }
-
-    submitFormAsJson(signupForm,
-      (data)=>{
-        const msg = data?.message || "ثبت‌نام با موفقیت انجام شد.";
-        showToast({type:"success", text:msg});
-
-        // 🔹 تغییر اصلی: بعد از موفقیت، به فرم ورود برو
-        signupModal.classList.remove("show");
-        signupModal.setAttribute("aria-hidden","true");
-
-        // کمی تأخیر برای نمایش Toast، بعد فرم ورود باز میشه
-        setTimeout(()=> openLogin(), 1000);
-      },
-      (errData)=>{
-        const serverMsg = errData?.message || errData?.errorDescription || "خطا در ثبت‌نام — دوباره تلاش کنید.";
-        if(serverMsg.toLowerCase().includes("duplicate")){
-          showToast({type:"error", text:"ایمیل قبلاً ثبت شده است. از ورود استفاده کنید."});
         } else {
           onSuccess?.(data);
-          showToast({type:"error", text:serverMsg});
         }
       } catch(err){
         onError?.({ status: "error", message: "خطا در ارتباط با سرور. لطفا اتصال خود را بررسی کنید." });
@@ -475,6 +336,3 @@
   </script>
 </body>
 </html>
-    );
-  });
-</script>
