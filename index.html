@@ -37,11 +37,12 @@
     .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
     .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
     .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
+    .muted{color:var(--muted);font-size:13px;margin-top:6px}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
+    <div class="card" role="main">
       <h1>ورود یا ثبت نام</h1>
       <div class="btns">
         <button id="loginBtn" class="btn">ورود</button>
@@ -52,57 +53,69 @@
   </div>
 
   <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeLogin">&times;</button>
-      <h2>ورود به حساب کاربری</h2>
-      <form id="loginForm">
+  <div id="loginModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="close" id="closeLogin" aria-label="بستن">&times;</button>
+      <h2 id="loginTitle">ورود به حساب کاربری</h2>
+      <form id="loginForm" autocomplete="on">
         <input type="hidden" name="formType" value="login">
         <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+          <input id="loginEmail" name="email" type="email" placeholder="ایمیل (انگلیسی)" required
+                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="ایمیل باید با حروف انگلیسی باشد.">
         </div>
         <div class="form-row">
-          <input name="password" type="password" placeholder="رمز عبور" required minlength="6" pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<>,.?/|\\`~]+$">
+          <input id="loginPassword" name="password" type="password" placeholder="رمز عبور" required minlength="6"
+                 pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<>,.?/|\\`~]+$" title="رمز فقط حروف/اعداد و کاراکترهای مجاز انگلیسی می‌پذیرد.">
         </div>
         <div class="error-text" id="loginError"></div>
         <button class="submit" type="submit">ورود</button>
+        <div class="note muted">اگر حساب ندارید، از ثبت نام استفاده کنید.</div>
       </form>
     </div>
   </div>
 
   <!-- Signup Modal -->
-  <div id="signupModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeSignup">&times;</button>
-      <h2>ثبت نام</h2>
-      <form id="signupForm">
+  <div id="signupModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <button class="close" id="closeSignup" aria-label="بستن">&times;</button>
+      <h2 id="signupTitle">ثبت نام</h2>
+      <form id="signupForm" autocomplete="on">
         <input type="hidden" name="formType" value="signup">
         <input type="hidden" name="role" value="manager">
 
         <div class="form-row">
-          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
+          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required
+                 pattern="^[\u0600-\u06FF\s]+$" title="فقط حروف فارسی مجاز است.">
         </div>
+
         <div class="form-row">
-          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required pattern="^[0-9]+$">
+          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط ارقام انگلیسی)" required
+                 pattern="^[0-9]+$" title="فقط ارقام 0-9 انگلیسی مجاز است.">
         </div>
+
         <div class="form-row">
-          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
+          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار (فقط فارسی)" required
+                 pattern="^[\u0600-\u06FF\s]+$" title="فقط حروف فارسی مجاز است.">
         </div>
+
         <div class="form-row">
           <select id="job_type" name="job_type_id" required>
             <option value="">در حال بارگذاری نوع شغل...</option>
           </select>
         </div>
+
         <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required 
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required
+                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" title="ایمیل باید با حروف انگلیسی باشد.">
         </div>
+
         <div class="form-row">
-          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required 
-            pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<
+          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required
+                 pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<>,.?/|\\`~]+$" title="رمز فقط حروف/اعداد و کاراکترهای مجاز انگلیسی می‌پذیرد.">
         </div>
+
         <div class="form-row">
-          <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
+          <input id="confirmPassword" name="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
         </div>
 
         <div class="error-text" id="signupError"></div>
@@ -111,108 +124,219 @@
     </div>
   </div>
 
-  <div class="toast-wrap">
-    <div id="toast" class="toast"><span id="toastText"></span></div>
+  <div class="toast-wrap" aria-live="polite" aria-atomic="true">
+    <div id="toast" class="toast"><span class="icon" id="toastIcon"></span><span id="toastText"></span></div>
   </div>
 
   <script>
+    // ---------- CONFIG ----------
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/job-types";
-    const $ = id => document.getElementById(id);
+    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types";
 
+    // ---------- helpers ----------
+    const $ = (id)=>document.getElementById(id);
     function showToast({type="error", text="", timeout=3500}){
-      const t=$("toast");
-      t.className="toast "+(type==="success"?"success":"error");
-      $("toastText").textContent=text;
+      const t = $("toast");
+      const icon = $("toastIcon");
+      const txt = $("toastText");
+      t.className = "toast " + (type==="success" ? "success" : "error");
+      txt.textContent = text;
+      icon.innerHTML = ""; // keep simple
       t.classList.add("show");
       clearTimeout(t._t);
-      t._t=setTimeout(()=>t.classList.remove("show"),timeout);
+      t._t = setTimeout(()=> t.classList.remove("show"), timeout);
     }
 
-    // --- Modal logic ---
-    const loginModal=$("loginModal"),signupModal=$("signupModal");
-    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");loginModal.classList.add("show");};
-    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");signupModal.classList.add("show");};
-    $("closeLogin").onclick=()=>loginModal.classList.remove("show");
-    $("closeSignup").onclick=()=>signupModal.classList.remove("show");
-    window.onclick=(e)=>{if(e.target===loginModal)loginModal.classList.remove("show");if(e.target===signupModal)signupModal.classList.remove("show");};
+    // ---------- modal logic ----------
+    const loginBtn = $("loginBtn"), signupBtn = $("signupBtn");
+    const loginModal = $("loginModal"), signupModal = $("signupModal");
+    const closeLogin = $("closeLogin"), closeSignup = $("closeSignup");
+    const loginForm = $("loginForm"), signupForm = $("signupForm");
 
-    // --- Load Job Types ---
+    function openLogin(){
+      signupModal.classList.remove("show");
+      signupModal.setAttribute("aria-hidden","true");
+      loginModal.classList.add("show");
+      loginModal.setAttribute("aria-hidden","false");
+      setTimeout(()=> $("loginEmail").focus(),80);
+    }
+    function openSignup(){
+      loginModal.classList.remove("show");
+      loginModal.setAttribute("aria-hidden","true");
+      signupModal.classList.add("show");
+      signupModal.setAttribute("aria-hidden","false");
+      setTimeout(()=> $("fullname").focus(),80);
+    }
+    loginBtn.addEventListener("click", openLogin);
+    signupBtn.addEventListener("click", openSignup);
+    closeLogin.addEventListener("click", ()=> { loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); });
+    closeSignup.addEventListener("click", ()=> { signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); });
+    window.addEventListener("click",(e)=>{
+      if(e.target===loginModal){ loginModal.classList.remove("show"); loginModal.setAttribute("aria-hidden","true"); }
+      if(e.target===signupModal){ signupModal.classList.remove("show"); signupModal.setAttribute("aria-hidden","true"); }
+    });
+
+    // ---------- input sanitizers (UX) ----------
+    // fullname/business: remove latin letters & digits while typing
+    function allowOnlyPersianText(evt){
+      const el = evt.target;
+      // keep Persian letters, spaces, and remove others
+      const cleaned = (el.value.match(/[\u0600-\u06FF\s]+/g) || []).join('');
+      if(cleaned !== el.value) el.value = cleaned;
+    }
+    // phone: keep only ASCII digits
+    function allowOnlyAsciiDigits(evt){
+      const el = evt.target;
+      const cleaned = (el.value.match(/[0-9]+/g) || []).join('');
+      if(cleaned !== el.value) el.value = cleaned;
+    }
+    // password: remove any Persian/Arabic letters (block non-ascii range roughly)
+    function sanitizePasswordInput(evt){
+      const el = evt.target;
+      // allow ASCII printable chars
+      const cleaned = (el.value.match(/[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+/g) || []).join('');
+      if(cleaned !== el.value) el.value = cleaned;
+    }
+
+    $("fullname").addEventListener("input", allowOnlyPersianText);
+    $("business_name").addEventListener("input", allowOnlyPersianText);
+    $("phone").addEventListener("input", allowOnlyAsciiDigits);
+
+    $("password").addEventListener("input", sanitizePasswordInput);
+    $("confirmPassword").addEventListener("input", sanitizePasswordInput);
+    $("loginPassword").addEventListener("input", sanitizePasswordInput);
+
+    // ---------- load job types ----------
     async function loadJobTypes(){
       const select=$("job_type");
+      // initial state
+      select.innerHTML = '<option value="">در حال بارگذاری نوع شغل...</option>';
       try{
-        const res=await fetch(JOB_LIST_URL);
-        const data=await res.json();
-        select.innerHTML="";
-        if(Array.isArray(data)){
-          data.forEach(job=>{
-            const opt=document.createElement("option");
-            opt.value=job.id;
-            opt.textContent=job.title||job.name;
-            select.appendChild(opt);
-          });
-        }else select.innerHTML='<option>لیست خالی است</option>';
-      }catch{select.innerHTML='<option>خطا در بارگذاری</option>';}
+        const res = await fetch(JOB_LIST_URL, { method: 'GET', cache: 'no-store' });
+        if(!res.ok){
+          // try to read body for message
+          let text;
+          try{ text = await res.text(); }catch(e){ text = res.statusText || 'خطای شبکه'; }
+          console.error('job-types fetch failed', res.status, text);
+          select.innerHTML = '<option value="">خطا در بارگذاری (' + res.status + ')</option>';
+          return;
+        }
+        // parse JSON safely
+        let data;
+        try { data = await res.json(); } catch(e){ console.error('invalid json job-types', e); select.innerHTML = '<option value="">پاسخ نامعتبر از سرور</option>'; return; }
+
+        // n8n / supabase usually returns an array; handle wrapped forms
+        let arr = [];
+        if(Array.isArray(data)) arr = data;
+        else if(Array.isArray(data.data)) arr = data.data;
+        else if(Array.isArray(data.rows)) arr = data.rows;
+        else {
+          // try to find first array in response
+          for(const k of Object.keys(data)){
+            if(Array.isArray(data[k])){ arr = data[k]; break; }
+          }
+        }
+
+        if(!arr || arr.length === 0){
+          select.innerHTML = '<option value="">لیست خالی است</option>';
+          return;
+        }
+
+        // populate (expect objects with id and job_name)
+        select.innerHTML = '<option value="">انتخاب نوع شغل</option>';
+        arr.forEach(job=>{
+          const opt = document.createElement('option');
+          opt.value = job.id ?? job.uuid ?? job._id ?? '';
+          opt.textContent = job.job_name ?? job.jobName ?? job.name ?? job.title ?? String(job.id);
+          select.appendChild(opt);
+        });
+
+      }catch(err){
+        console.error('error loading job types', err);
+        select.innerHTML = '<option value="">خطا در بارگذاری</option>';
+      }
     }
+    // call load
     loadJobTypes();
 
-    // --- Handle Forms ---
-    async function submitForm(form){
-      const fm=new FormData(form);
-      try{
-        const res=await fetch(WEBHOOK_URL,{method:"POST",body:fm});
-        const data=await res.json();
+    // ---------- submit helper ----------
+    async function submitFormAsJson(formElement, onSuccess, onError){
+      const fm = new FormData(formElement);
+      try {
+        const res = await fetch(WEBHOOK_URL, { method: "POST", body: fm });
+        let data = null;
+        try { data = await res.json(); } catch(e){ /* ignore */ }
         if(res.ok){
-          showToast({type:"success",text:data.message||"عملیات موفق!"});
-          form.reset();
-          signupModal.classList.remove("show");
-          loginModal.classList.remove("show");
-        }else showToast({text:data.message||"خطا در انجام عملیات"});
-      }catch{showToast({text:"خطا در ارتباط با سرور"});}
+          onSuccess?.(data ?? { status: "ok" });
+        } else {
+          onError?.(data ?? { status: "error", message: res.statusText || 'خطا' });
+        }
+      } catch(err){
+        onError?.({ status: "error", message: "خطا در ارتباط با سرور" });
+      }
     }
 
-    $("signupForm").onsubmit=e=>{
+    // ---------- login logic ----------
+    loginForm.addEventListener("submit", function(e){
       e.preventDefault();
-      const pass=$("password").value.trim();
-      const confirm=$("confirmPassword").value.trim();
-      if(pass!==confirm){
-        showToast({text:"رمز عبور و تکرار آن یکسان نیست!"});
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value;
+      // basic validation: pattern attributes already handle, but extra checks:
+      if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
+        showToast({text:"ایمیل نامعتبر است — از حروف انگلیسی استفاده کنید."});
         return;
       }
-      submitForm(e.target);
-    };
+      if(!/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{6,}$/.test(password)){
+        showToast({text:"رمز عبور نامعتبر است — حداقل 6 نویسه و فقط کاراکترهای مجاز انگلیسی."});
+        return;
+      }
 
-    $("loginForm").onsubmit=e=>{
+      submitFormAsJson(loginForm,
+        (data)=>{ showToast({type:"success", text: data?.message || "ورود با موفقیت انجام شد."}); loginModal.classList.remove("show"); },
+        (err)=>{ showToast({text: err?.message || "ورود ناموفق — ایمیل یا رمز اشتباه است."}); }
+      );
+    });
+
+    // ---------- signup logic ----------
+    signupForm.addEventListener("submit", function(e){
       e.preventDefault();
-      submitForm(e.target);
-    };
+      const fullname = signupForm.fullname.value.trim();
+      const phone = signupForm.phone.value.trim();
+      const business = signupForm.business_name.value.trim();
+      const jobType = signupForm.job_type_id.value;
+      const email = signupForm.email.value.trim();
+      const password = signupForm.password.value;
+      const confirm = signupForm.confirmPassword.value;
+
+      if(fullname.length < 2 || !/^[\u0600-\u06FF\s]+$/.test(fullname)){
+        showToast({text:"نام کامل فقط باید حروف فارسی و حداقل 2 حرف باشد."}); return;
+      }
+      if(!/^[0-9]+$/.test(phone)){
+        showToast({text:"شماره تماس فقط باید ارقام انگلیسی 0-9 باشد."}); return;
+      }
+      if(business.length < 2 || !/^[\u0600-\u06FF\s]+$/.test(business)){
+        showToast({text:"نام کسب‌وکار فقط باید حروف فارسی باشد."}); return;
+      }
+      if(!jobType){
+        showToast({text:"لطفاً نوع شغل را انتخاب کنید."}); return;
+      }
+      if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)){
+        showToast({text:"ایمیل نامعتبر است — از حروف انگلیسی استفاده کنید."}); return;
+      }
+      if(!/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]{6,}$/.test(password)){
+        showToast({text:"رمز عبور نامعتبر — حداقل 6 نویسه و بدون حروف فارسی."}); return;
+      }
+      if(password !== confirm){
+        showToast({text:"رمز عبور و تکرار آن یکسان نیست!"}); return;
+      }
+
+      // Submit
+      submitFormAsJson(signupForm,
+        (data)=>{ showToast({type:"success", text: data?.message || "ثبت‌نام با موفقیت انجام شد."}); signupForm.reset(); signupModal.classList.remove("show"); },
+        (err)=>{ showToast({text: err?.message || "خطا در ثبت‌نام — دوباره تلاش کنید."}); }
+      );
+    });
+
   </script>
-  
-  <script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const select = document.getElementById("job_type");
-    
-    try {
-      const response = await fetch("https://n8n.yourdomain.com/webhook/get-job-types");
-      const jobTypes = await response.json();
-
-      // پاک کردن گزینه‌ی پیش‌فرض
-      select.innerHTML = '<option value="">انتخاب نوع شغل</option>';
-
-      // اضافه کردن گزینه‌ها از دیتابیس
-      jobTypes.forEach(job => {
-        const option = document.createElement("option");
-        option.value = job.id;
-        option.textContent = job.name;
-        select.appendChild(option);
-      });
-
-    } catch (error) {
-      console.error("خطا در بارگذاری نوع شغل:", error);
-      select.innerHTML = '<option value="">خطا در بارگذاری</option>';
-    }
-  });
-</script>
-
 </body>
 </html>
