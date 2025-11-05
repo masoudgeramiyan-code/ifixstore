@@ -1,4 +1,171 @@
-<script>
+@@ -1,337 +1,146 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ورود / ثبت نام</title>
+  <style>
+    :root{
+      --bg:#f4f6f8;
+      --card:#ffffff;
+      --accent:#4CAF50;
+      --accent-2:#45a049;
+      --muted:#6b7280;
+      --danger:#f44336;
+      --orange:#f39c12;
+      --success:#2d9c3a;
+      --radius:10px;
+      --shadow: 0 6px 18px rgba(20,20,30,0.08);
+      font-family: "Vazirmatn", Arial, sans-serif;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);direction:rtl}
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:28px;
+      width:380px;
+      max-width:95%;
+      text-align:center;
+    }
+    h1{margin:0 0 12px;font-size:20px}
+    .btns{display:flex;gap:12px;justify-content:center;margin:14px 0 6px}
+    button.btn{
+      flex:1;padding:10px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;
+    }
+    button.btn.secondary{background:#0ea5a5}
+    button.btn:active{transform:translateY(1px)}
+    .hint{color:var(--muted);font-size:13px;margin-top:6px}
+
+    /* modal */
+    .modal {
+      display:none;
+      position:fixed;
+      z-index:1200;
+      left:0;top:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.35);
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+    }
+    .modal.show{display:flex}
+    .modal-card{
+      width:100%;max-width:420px;background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;
+    }
+    .modal .close{
+      position:absolute;left:14px;top:10px;color:#999;font-size:22px;border:none;background:transparent;cursor:pointer
+    }
+    .modal-card h2{margin:0 0 10px;font-size:18px}
+    .form-row{margin:10px 0}
+    input[type="text"],input[type="email"],input[type="password"]{
+      width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
+    }
+    input[disabled]{opacity:0.6}
+    .submit{
+      margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;
+    }
+    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
+
+    /* toast */
+    .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
+    .toast{
+      min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.12);font-weight:600;font-size:14px;
+      opacity:0;pointer-events:none;transition:all .28s ease;
+    }
+    .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
+    .toast .icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
+    .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
+    .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
+    .toast .icon svg{width:18px;height:18px}
+
+    /* small helper */
+    .muted{color:var(--muted);font-size:13px}
+    @media (max-width:420px){
+      .card{padding:16px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="title">
+      <h1 id="title">ورود یا ثبت نام</h1>
+      <div class="btns">
+        <button id="loginBtn" class="btn">ورود</button>
+        <button id="signupBtn" class="btn secondary">ثبت نام</button>
+      </div>
+      <div class="hint">از دکمه‌ها استفاده کنید تا فرم مناسب باز شود.</div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="close" id="closeLogin" aria-label="بستن">&times;</button>
+      <h2 id="loginTitle">ورود به حساب کاربری</h2>
+
+      <form id="loginForm" autocomplete="on">
+        <!-- hidden form type -->
+        <input type="hidden" name="formType" value="login">
+        <div class="form-row">
+          <input id="loginEmail" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+        </div>
+        <div class="form-row">
+          <input id="loginPassword" name="password" type="password" placeholder="رمز عبور" minlength="6" required
+                 pattern="[A-Za-z0-9!@#$%^&*()_+]{6,}" title="رمز باید حروف/اعداد انگلیسی یا کاراکترهای مجاز باشد (حداقل 6 کاراکتر)">
+        </div>
+
+        <div class="error-text" id="loginError"></div>
+
+        <button class="submit" type="submit">ورود</button>
+        <div class="note muted">اگر حساب ندارید، از دکمه ثبت نام استفاده کنید.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <button class="close" id="closeSignup" aria-label="بستن">&times;</button>
+      <h2 id="signupTitle">ثبت نام</h2>
+
+      <form id="signupForm" autocomplete="on">
+        <!-- hidden form type -->
+        <input type="hidden" name="formType" value="signup">
+        <div class="form-row">
+          <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
+        </div>
+        <div class="form-row">
+          <input id="signupEmail" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+        </div>
+        <div class="form-row">
+          <input id="signupPassword" name="password" type="password" placeholder="رمز عبور" minlength="6" required
+                 pattern="[A-Za-z0-9!@#$%^&*()_+]{6,}" title="رمز باید حروف/اعداد انگلیسی یا کاراکترهای مجاز باشد (حداقل 6 کاراکتر)">
+        </div>
+
+        <div class="error-text" id="signupError"></div>
+
+        <button class="submit" type="submit">ثبت نام</button>
+        <div class="note muted">ایمیل‌های تکراری پذیرفته نمی‌شوند.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-wrap" aria-live="polite" aria-atomic="true">
+    <div id="toast" class="toast"><span class="icon" id="toastIcon"></span><span id="toastText"></span></div>
+  </div>
+
+  <script>
   // ---------- CONFIG ----------
   const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form"; // <-- تأیید کن یا جایگزین کن
 
@@ -141,6 +308,11 @@
           showToast({type:"error", text:serverMsg});
         }
       }
+    );
+  });
+</script>
+</body>
+</html>
     );
   });
 </script>
