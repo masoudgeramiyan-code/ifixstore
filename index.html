@@ -6,88 +6,42 @@
   <title>ورود / ثبت نام</title>
   <style>
     :root{
-      --bg:#f4f6f8;
-      --card:#ffffff;
-      --accent:#4CAF50;
-      --accent-2:#45a049;
-      --muted:#6b7280;
-      --danger:#f44336;
-      --orange:#f39c12;
-      --success:#2d9c3a;
-      --radius:10px;
-      --shadow: 0 6px 18px rgba(20,20,30,0.08);
-      font-family: "Vazirmatn", Arial, sans-serif;
+      --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#45a049;
+      --muted:#6b7280;--danger:#f44336;--success:#2d9c3a;
+      --radius:10px;--shadow:0 6px 18px rgba(20,20,30,0.08);
+      font-family:"Vazirmatn",Arial,sans-serif;
     }
     html,body{height:100%;margin:0;background:var(--bg);direction:rtl}
-    .wrap{
-      min-height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      box-shadow:var(--shadow);
-      padding:28px;
-      width:380px;
-      max-width:95%;
-      text-align:center;
-    }
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:28px;width:380px;max-width:95%;text-align:center}
     h1{margin:0 0 12px;font-size:20px}
     .btns{display:flex;gap:12px;justify-content:center;margin:14px 0 6px}
-    button.btn{
-      flex:1;padding:10px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;
-    }
+    button.btn{flex:1;padding:10px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;}
     button.btn.secondary{background:#0ea5a5}
     button.btn:active{transform:translateY(1px)}
     .hint{color:var(--muted);font-size:13px;margin-top:6px}
-
-    .modal {
-      display:none;
-      position:fixed;
-      z-index:1200;
-      left:0;top:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.35);
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-    }
+    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:20px}
     .modal.show{display:flex}
-    .modal-card{
-      width:100%;max-width:420px;background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative;
-    }
-    .modal .close{
-      position:absolute;left:14px;top:10px;color:#999;font-size:22px;border:none;background:transparent;cursor:pointer
-    }
+    .modal-card{width:100%;max-width:420px;background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative}
+    .modal .close{position:absolute;left:14px;top:10px;color:#999;font-size:22px;border:none;background:transparent;cursor:pointer}
     .modal-card h2{margin:0 0 10px;font-size:18px}
     .form-row{margin:10px 0}
     input[type="text"],input[type="email"],input[type="password"],select{
       width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
     }
     select{background:#fff}
-    .submit{
-      margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;
-    }
-    .note{font-size:13px;color:var(--muted);margin-top:8px}
+    .submit{margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;}
     .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
-
     .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
-    .toast{
-      min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;
-      box-shadow:0 6px 20px rgba(0,0,0,0.12);font-weight:600;font-size:14px;
-      opacity:0;pointer-events:none;transition:all .28s ease;
-    }
+    .toast{min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.12);font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .28s ease;}
     .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
-    .toast .icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px}
     .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
     .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="card" role="main">
+    <div class="card">
       <h1>ورود یا ثبت نام</h1>
       <div class="btns">
         <button id="loginBtn" class="btn">ورود</button>
@@ -105,10 +59,10 @@
       <form id="loginForm">
         <input type="hidden" name="formType" value="login">
         <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل" required>
+          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
         </div>
         <div class="form-row">
-          <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
+          <input name="password" type="password" placeholder="رمز عبور" required minlength="6" pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<>,.?/|\\`~]+$">
         </div>
         <div class="error-text" id="loginError"></div>
         <button class="submit" type="submit">ورود</button>
@@ -124,14 +78,15 @@
       <form id="signupForm">
         <input type="hidden" name="formType" value="signup">
         <input type="hidden" name="role" value="manager">
+
         <div class="form-row">
-          <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
+          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
         </div>
         <div class="form-row">
-          <input id="phone" name="phone" type="text" placeholder="شماره تماس" required>
+          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required pattern="^[0-9]+$">
         </div>
         <div class="form-row">
-          <input id="business_name" name="business_name" type="text" placeholder="نام کسب و کار" required>
+          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
         </div>
         <div class="form-row">
           <select id="job_type" name="job_type_id" required>
@@ -139,11 +94,17 @@
           </select>
         </div>
         <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required 
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
         </div>
         <div class="form-row">
-          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
+          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required 
+            pattern="^[A-Za-z0-9!@#$%^&*()_+=\-{}\[\]:;\"'<>,.?/|\\`~]+$">
         </div>
+        <div class="form-row">
+          <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
+        </div>
+
         <div class="error-text" id="signupError"></div>
         <button class="submit" type="submit">ثبت نام</button>
       </form>
@@ -151,18 +112,18 @@
   </div>
 
   <div class="toast-wrap">
-    <div id="toast" class="toast"><span class="icon" id="toastIcon"></span><span id="toastText"></span></div>
+    <div id="toast" class="toast"><span id="toastText"></span></div>
   </div>
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
     const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/job-types";
-
     const $ = id => document.getElementById(id);
+
     function showToast({type="error", text="", timeout=3500}){
-      const t=$("toast"),txt=$("toastText");
+      const t=$("toast");
       t.className="toast "+(type==="success"?"success":"error");
-      txt.textContent=text;
+      $("toastText").textContent=text;
       t.classList.add("show");
       clearTimeout(t._t);
       t._t=setTimeout(()=>t.classList.remove("show"),timeout);
@@ -176,30 +137,26 @@
     $("closeSignup").onclick=()=>signupModal.classList.remove("show");
     window.onclick=(e)=>{if(e.target===loginModal)loginModal.classList.remove("show");if(e.target===signupModal)signupModal.classList.remove("show");};
 
-    // --- Fetch job types from n8n ---
+    // --- Load Job Types ---
     async function loadJobTypes(){
       const select=$("job_type");
       try{
         const res=await fetch(JOB_LIST_URL);
         const data=await res.json();
         select.innerHTML="";
-        if(data && Array.isArray(data)){
+        if(Array.isArray(data)){
           data.forEach(job=>{
             const opt=document.createElement("option");
             opt.value=job.id;
-            opt.textContent=job.title || job.name;
+            opt.textContent=job.title||job.name;
             select.appendChild(opt);
           });
-        } else {
-          select.innerHTML='<option value="">لیست خالی است</option>';
-        }
-      }catch(e){
-        select.innerHTML='<option value="">خطا در بارگذاری</option>';
-      }
+        }else select.innerHTML='<option>لیست خالی است</option>';
+      }catch{select.innerHTML='<option>خطا در بارگذاری</option>';}
     }
     loadJobTypes();
 
-    // --- Handle submit ---
+    // --- Handle Forms ---
     async function submitForm(form){
       const fm=new FormData(form);
       try{
@@ -210,16 +167,25 @@
           form.reset();
           signupModal.classList.remove("show");
           loginModal.classList.remove("show");
-        }else{
-          showToast({text:data.message||"خطا در انجام عملیات"});
-        }
-      }catch(err){
-        showToast({text:"خطا در ارتباط با سرور"});
-      }
+        }else showToast({text:data.message||"خطا در انجام عملیات"});
+      }catch{showToast({text:"خطا در ارتباط با سرور"});}
     }
 
-    $("loginForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
-    $("signupForm").onsubmit=e=>{e.preventDefault();submitForm(e.target);}
+    $("signupForm").onsubmit=e=>{
+      e.preventDefault();
+      const pass=$("password").value.trim();
+      const confirm=$("confirmPassword").value.trim();
+      if(pass!==confirm){
+        showToast({text:"رمز عبور و تکرار آن یکسان نیست!"});
+        return;
+      }
+      submitForm(e.target);
+    };
+
+    $("loginForm").onsubmit=e=>{
+      e.preventDefault();
+      submitForm(e.target);
+    };
   </script>
 </body>
 </html>
