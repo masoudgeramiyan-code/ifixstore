@@ -58,12 +58,12 @@
     .modal .close:hover{color:#000}
     .modal-card h2{margin:0 0 10px;font-size:18px;color:#333}
     .form-row{margin:10px 0}
-    input[type="text"],input[type="email"],input[type="password"]{
+    input[type="text"],input[type="email"],input[type="password"],select{
       width:100%;padding:10px;border-radius:8px;
       border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
       transition:all .2s ease;background:#fafafa;
     }
-    input:focus{
+    input:focus,select:focus{
       outline:none;border-color:var(--accent);
       box-shadow:0 0 0 3px rgba(76,175,80,0.15);
       background:#fff;
@@ -141,6 +141,14 @@
         <div class="form-row">
           <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required pattern="^[0-9]+$">
         </div>
+
+        <!-- فیلد انتخاب نوع شغل -->
+        <div class="form-row">
+          <select id="job_type" name="job_type_id" required>
+            <option value="">در حال بارگذاری نوع شغل...</option>
+          </select>
+        </div>
+
         <div class="form-row">
           <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
         </div>
@@ -168,6 +176,7 @@
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
+    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types";
     const $ = id => document.getElementById(id);
 
     function showToast({type="error", text="", timeout=3500}){
@@ -184,7 +193,7 @@
     const loginForm=$("loginForm"),signupForm=$("signupForm");
 
     $("loginBtn").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();loginModal.classList.add("show");};
-    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();signupModal.classList.add("show");};
+    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();signupModal.classList.add("show");loadJobTypes();};
 
     $("closeLogin").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();};
     $("closeSignup").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();};
@@ -194,7 +203,30 @@
       if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
     };
 
-    // --- Handle Forms ---
+    // --- دریافت لیست نوع شغل ---
+    async function loadJobTypes(){
+      const select = $("job_type");
+      select.innerHTML = '<option>در حال بارگذاری...</option>';
+      try {
+        const res = await fetch(JOB_LIST_URL);
+        const data = await res.json();
+        select.innerHTML = "";
+        if (Array.isArray(data) && data.length) {
+          data.forEach(job => {
+            const opt = document.createElement("option");
+            opt.value = job.id;
+            opt.textContent = job.job_name;
+            select.appendChild(opt);
+          });
+        } else {
+          select.innerHTML = '<option>لیست خالی است</option>';
+        }
+      } catch (err) {
+        select.innerHTML = '<option>خطا در بارگذاری لیست</option>';
+      }
+    }
+
+    // --- ارسال فرم‌ها ---
     async function submitForm(form){
       const btn=form.querySelector(".submit");
       btn.disabled=true;
