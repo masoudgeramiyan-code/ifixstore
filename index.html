@@ -208,7 +208,7 @@
       const select = $("job_type");
       select.innerHTML = '<option>در حال بارگذاری...</option>';
       try {
-        const res = await fetch(https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types);
+        const res = await fetch(JOB_LIST_URL);
         const data = await res.json();
         select.innerHTML = "";
         if (Array.isArray(data) && data.length) {
