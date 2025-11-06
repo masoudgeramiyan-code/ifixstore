@@ -6,34 +6,92 @@
   <title>ورود / ثبت نام</title>
   <style>
     :root{
-      --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#45a049;
+      --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#43a047;
       --muted:#6b7280;--danger:#f44336;--success:#2d9c3a;
       --radius:10px;--shadow:0 6px 18px rgba(20,20,30,0.08);
-      font-family:"Vazirmatn",Arial,sans-serif;
+      font-family:"Vazirmatn",sans-serif;
     }
     html,body{height:100%;margin:0;background:var(--bg);direction:rtl}
     .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:28px;width:380px;max-width:95%;text-align:center}
-    h1{margin:0 0 12px;font-size:20px}
-    .btns{display:flex;gap:12px;justify-content:center;margin:14px 0 6px}
-    button.btn{flex:1;padding:10px 12px;border-radius:8px;border:none;background:var(--accent);color:#fff;cursor:pointer;font-weight:600;}
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:var(--shadow);
+      padding:32px 28px;
+      width:380px;max-width:95%;
+      text-align:center;
+      transition:all .3s ease;
+    }
+    .card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,20,30,0.1);}
+    h1{margin:0 0 12px;font-size:22px;color:#333}
+    .btns{display:flex;gap:12px;justify-content:center;margin:18px 0 8px}
+    button.btn{
+      flex:1;padding:10px 12px;border-radius:8px;border:none;
+      background:var(--accent);color:#fff;cursor:pointer;font-weight:600;
+      transition:all .2s ease;font-size:15px;
+    }
     button.btn.secondary{background:#0ea5a5}
+    button.btn:hover{background:var(--accent-2)}
     button.btn:active{transform:translateY(1px)}
     .hint{color:var(--muted);font-size:13px;margin-top:6px}
-    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:20px}
-    .modal.show{display:flex}
-    .modal-card{width:100%;max-width:420px;background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:relative}
-    .modal .close{position:absolute;left:14px;top:10px;color:#999;font-size:22px;border:none;background:transparent;cursor:pointer}
-    .modal-card h2{margin:0 0 10px;font-size:18px}
+
+    /* --- Modal --- */
+    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:20px;
+      opacity:0;transition:opacity .25s ease;}
+    .modal.show{display:flex;opacity:1;}
+    .modal-card{
+      width:100%;max-width:420px;background:var(--card);
+      border-radius:var(--radius);padding:24px 22px;
+      box-shadow:var(--shadow);position:relative;
+      animation:fadeInUp .3s ease forwards;
+    }
+    @keyframes fadeInUp{
+      from{transform:translateY(30px);opacity:0;}
+      to{transform:translateY(0);opacity:1;}
+    }
+    .modal .close{
+      position:absolute;left:14px;top:10px;color:#999;font-size:22px;
+      border:none;background:transparent;cursor:pointer;
+      transition:color .2s ease;
+    }
+    .modal .close:hover{color:#000}
+    .modal-card h2{margin:0 0 10px;font-size:18px;color:#333}
     .form-row{margin:10px 0}
     input[type="text"],input[type="email"],input[type="password"],select{
-      width:100%;padding:10px;border-radius:8px;border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
+      width:100%;padding:10px;border-radius:8px;
+      border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
+      transition:all .2s ease;background:#fafafa;
+    }
+    input:focus,select:focus{
+      outline:none;border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(76,175,80,0.15);
+      background:#fff;
     }
     select{background:#fff}
-    .submit{margin-top:8px;padding:10px;border-radius:8px;border:none;background:var(--accent);color:#fff;width:100%;cursor:pointer;font-weight:600;}
+    .submit{
+      margin-top:10px;padding:10px;border-radius:8px;border:none;
+      background:var(--accent);color:#fff;width:100%;
+      cursor:pointer;font-weight:600;transition:all .2s ease;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .submit:hover{background:var(--accent-2)}
+    .submit.loading{opacity:0.8;cursor:not-allowed;}
+    .spinner{
+      width:16px;height:16px;border:2px solid rgba(255,255,255,0.6);
+      border-top-color:#fff;border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+
     .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
+
+    /* Toast */
     .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
-    .toast{min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.12);font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:all .28s ease;}
+    .toast{min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;
+      display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.12);
+      font-weight:600;font-size:14px;opacity:0;pointer-events:none;
+      transition:all .28s ease;}
     .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
     .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
     .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
@@ -59,12 +117,12 @@
       <form id="loginForm">
         <input type="hidden" name="formType" value="login">
         <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required 
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
         </div>
         <div class="form-row">
           <input name="password" type="password" placeholder="رمز عبور" required minlength="6" 
-pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
-
+            pattern="^[A-Za-z0-9!@#$%^&*()_+=\\[\\]{}:;\"'<>
         </div>
         <div class="error-text" id="loginError"></div>
         <button class="submit" type="submit">ورود</button>
@@ -101,7 +159,7 @@ pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
         </div>
         <div class="form-row">
           <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required 
-pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
+            pattern="^[A-Za-z0-9!@#$%^&*()_+=\\[\\]{}:;\"'<>
         </div>
         <div class="form-row">
           <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
@@ -133,11 +191,18 @@ pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
 
     // --- Modal logic ---
     const loginModal=$("loginModal"),signupModal=$("signupModal");
-    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");loginModal.classList.add("show");};
-    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");signupModal.classList.add("show");};
-    $("closeLogin").onclick=()=>loginModal.classList.remove("show");
-    $("closeSignup").onclick=()=>signupModal.classList.remove("show");
-    window.onclick=(e)=>{if(e.target===loginModal)loginModal.classList.remove("show");if(e.target===signupModal)signupModal.classList.remove("show");};
+    const loginForm=$("loginForm"),signupForm=$("signupForm");
+
+    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();loginModal.classList.add("show");};
+    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();signupModal.classList.add("show");};
+
+    $("closeLogin").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();};
+    $("closeSignup").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();};
+
+    window.onclick=(e)=>{
+      if(e.target===loginModal){loginModal.classList.remove("show");loginForm.reset();}
+      if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
+    };
 
     // --- Load Job Types ---
     async function loadJobTypes(){
@@ -160,6 +225,11 @@ pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
 
     // --- Handle Forms ---
     async function submitForm(form){
+      const btn=form.querySelector(".submit");
+      btn.disabled=true;
+      btn.classList.add("loading");
+      const originalText=btn.textContent;
+      btn.innerHTML='<div class="spinner"></div> لطفاً صبر کنید...';
       const fm=new FormData(form);
       try{
         const res=await fetch(WEBHOOK_URL,{method:"POST",body:fm});
@@ -170,10 +240,15 @@ pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
           signupModal.classList.remove("show");
           loginModal.classList.remove("show");
         }else showToast({text:data.message||"خطا در انجام عملیات"});
-      }catch{showToast({text:"خطا در ارتباط با سرور"});}
+      }catch{
+        showToast({text:"خطا در ارتباط با سرور"});
+      }
+      btn.disabled=false;
+      btn.classList.remove("loading");
+      btn.textContent=originalText;
     }
 
-    $("signupForm").onsubmit=e=>{
+    signupForm.onsubmit=e=>{
       e.preventDefault();
       const pass=$("password").value.trim();
       const confirm=$("confirmPassword").value.trim();
@@ -184,7 +259,7 @@ pattern="^[A-Za-z0-9!@#$%^&*()_+=\[\]{}:;\"'<>
       submitForm(e.target);
     };
 
-    $("loginForm").onsubmit=e=>{
+    loginForm.onsubmit=e=>{
       e.preventDefault();
       submitForm(e.target);
     };
