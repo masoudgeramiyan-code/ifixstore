@@ -144,9 +144,35 @@
 
         <!-- فیلد انتخاب نوع شغل -->
         <div class="form-row">
-          <select id="job_type" name="job_type_id" required>
-            <option value="">در حال بارگذاری نوع شغل...</option>
-          </select>
+          <select id="jobType" name="jobType">
+  <option value="">در حال بارگذاری...</option>
+</select>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types";
+  const jobSelect = document.getElementById("jobType");
+
+  fetch(JOB_LIST_URL)
+    .then(response => {
+      if (!response.ok) throw new Error("HTTP error " + response.status);
+      return response.json();
+    })
+    .then(data => {
+      jobSelect.innerHTML = ""; // حذف گزینه پیش‌فرض
+      data.forEach(job => {
+        const option = document.createElement("option");
+        option.value = job.id;
+        option.textContent = job.job_name;
+        jobSelect.appendChild(option);
+      });
+    })
+    .catch(error => {
+      console.error("❌ خطا در بارگذاری لیست مشاغل:", error);
+      jobSelect.innerHTML = "<option value=''>خطا در بارگذاری</option>";
+    });
+});
+</script>
         </div>
 
         <div class="form-row">
