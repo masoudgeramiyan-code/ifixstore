@@ -177,7 +177,7 @@
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/job-types";
+    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types";
     const $ = id => document.getElementById(id);
 
     function showToast({type="error", text="", timeout=3500}){
@@ -208,7 +208,7 @@
     async function loadJobTypes(){
       const select=$("job_type");
       try{
-        const res=await fetch(JOB_LIST_URL);
+        const res=await fetch(https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types);
         const data=await res.json();
         select.innerHTML="";
         if(Array.isArray(data)){
