@@ -35,7 +35,6 @@
     button.btn:active{transform:translateY(1px)}
     .hint{color:var(--muted);font-size:13px;margin-top:6px}
 
-    /* --- Modal --- */
     .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;
       background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:20px;
       opacity:0;transition:opacity .25s ease;}
@@ -82,7 +81,6 @@
       animation:spin 1s linear infinite;
     }
     @keyframes spin{to{transform:rotate(360deg);}}
-    .error-text{color:var(--danger);font-size:13px;margin-top:6px;display:none}
     .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
     .toast{min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;
       display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.12);
@@ -113,14 +111,11 @@
       <form id="loginForm">
         <input type="hidden" name="formType" value="login">
         <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required 
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
         </div>
         <div class="form-row">
-          <input name="password" type="password" placeholder="رمز عبور" required minlength="6"
-            pattern="^[A-Za-z0-9!@#$%^&*()_+=\\[\\]{}:;\"'<>,.?/|\\`~\\-]+$">
+          <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
         </div>
-        <div class="error-text" id="loginError"></div>
         <button class="submit" type="submit">ورود</button>
       </form>
     </div>
@@ -136,10 +131,10 @@
         <input type="hidden" name="role" value="manager">
 
         <div class="form-row">
-          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
+          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required>
         </div>
         <div class="form-row">
-          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required pattern="^[0-9]+$">
+          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required>
         </div>
 
         <!-- فیلد انتخاب نوع شغل -->
@@ -150,21 +145,18 @@
         </div>
 
         <div class="form-row">
-          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار (فقط فارسی)" required pattern="^[\u0600-\u06FF\s]+$">
+          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
         </div>
         <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required 
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
         </div>
         <div class="form-row">
-          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required 
-            pattern="^[A-Za-z0-9!@#$%^&*()_+=\\[\\]{}:;\"'<>,.?/|\\`~\\-]+$">
+          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
         </div>
         <div class="form-row">
           <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
         </div>
 
-        <div class="error-text" id="signupError"></div>
         <button class="submit" type="submit">ثبت نام</button>
       </form>
     </div>
@@ -176,7 +168,7 @@
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const JOB_LIST_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-job-types";
+    const LOCAL_JOB_FILE = "./job-list.json";
     const $ = id => document.getElementById(id);
 
     function showToast({type="error", text="", timeout=3500}){
@@ -188,7 +180,6 @@
       t._t=setTimeout(()=>t.classList.remove("show"),timeout);
     }
 
-    // --- Modal logic ---
     const loginModal=$("loginModal"),signupModal=$("signupModal");
     const loginForm=$("loginForm"),signupForm=$("signupForm");
 
@@ -203,15 +194,16 @@
       if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
     };
 
-    // --- دریافت لیست نوع شغل ---
+    // --- بارگذاری لیست شغل‌ها از فایل محلی ---
     async function loadJobTypes(){
       const select = $("job_type");
       select.innerHTML = '<option>در حال بارگذاری...</option>';
       try {
-        const res = await fetch(JOB_LIST_URL);
+        const res = await fetch(LOCAL_JOB_FILE);
         const data = await res.json();
         select.innerHTML = "";
         if (Array.isArray(data) && data.length) {
+          select.innerHTML = '<option value="">انتخاب نوع شغل</option>';
           data.forEach(job => {
             const opt = document.createElement("option");
             opt.value = job.id;
@@ -222,11 +214,12 @@
           select.innerHTML = '<option>لیست خالی است</option>';
         }
       } catch (err) {
+        console.error(err);
         select.innerHTML = '<option>خطا در بارگذاری لیست</option>';
       }
     }
 
-    // --- ارسال فرم‌ها ---
+    // --- ارسال فرم ---
     async function submitForm(form){
       const btn=form.querySelector(".submit");
       btn.disabled=true;
