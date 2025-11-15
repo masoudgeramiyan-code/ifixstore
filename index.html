@@ -168,7 +168,10 @@
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const LOCAL_JOB_FILE = "./job-list.json";
+
+    // ❗❗ این URL را بعداً با وبهوک n8n مخصوص لیست مشاغل جایگزین کن
+    const JOBS_WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/get-jobs";
+
     const $ = id => document.getElementById(id);
 
     function showToast({type="error", text="", timeout=3500}){
@@ -194,28 +197,33 @@
       if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
     };
 
-    // --- بارگذاری لیست شغل‌ها از فایل محلی ---
+    // --- بارگذاری لیست شغل‌ها از n8n ---
     async function loadJobTypes(){
       const select = $("job_type");
       select.innerHTML = '<option>در حال بارگذاری...</option>';
+
       try {
-        const res = await fetch(LOCAL_JOB_FILE);
+        const res = await fetch(JOBS_WEBHOOK_URL);
         const data = await res.json();
+
         select.innerHTML = "";
+
         if (Array.isArray(data) && data.length) {
           select.innerHTML = '<option value="">انتخاب نوع شغل</option>';
+
           data.forEach(job => {
             const opt = document.createElement("option");
             opt.value = job.id;
-            opt.textContent = job.job_name;
+            opt.textContent = job.name;
             select.appendChild(opt);
           });
+
         } else {
-          select.innerHTML = '<option>لیست خالی است</option>';
+          select.innerHTML = '<option>لیست مشاغل خالی است</option>';
         }
       } catch (err) {
         console.error(err);
-        select.innerHTML = '<option>خطا در بارگذاری لیست</option>';
+        select.innerHTML = '<option>خطا در دریافت لیست از سرور</option>';
       }
     }
 
