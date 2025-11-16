@@ -125,11 +125,18 @@ input, select {
   font-size:14px;
   transition:.2s;
 }
-
-.form-row select {
-  width: 92% !important;
+    .form-row select {
+  width: 92%;           /* همان عرض input */
+  padding: 11px 12px;   /* همان padding */
+  height: 40px;         /* ارتفاع مشابه input */
+  font-size: 14px;      /* اندازه متن مشابه */
+  border-radius: 10px;  /* گردی گوشه مشابه */
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
   box-sizing: border-box;
+  appearance: none;     /* حذف فلش پیش‌فرض مرورگر */
 }
+
     
 input:hover, select:hover {
   background:#fff;
