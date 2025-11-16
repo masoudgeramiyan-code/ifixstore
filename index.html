@@ -108,14 +108,18 @@
     <div class="modal-card">
       <button class="close" id="closeLogin">&times;</button>
       <h2>ورود به حساب کاربری</h2>
+
       <form id="loginForm">
         <input type="hidden" name="formType" value="login">
+
         <div class="form-row">
-          <input name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+          <input name="phone" type="text" placeholder="شماره تماس" required>
         </div>
+
         <div class="form-row">
           <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
         </div>
+
         <button class="submit" type="submit">ورود</button>
       </form>
     </div>
@@ -126,6 +130,7 @@
     <div class="modal-card">
       <button class="close" id="closeSignup">&times;</button>
       <h2>ثبت نام</h2>
+
       <form id="signupForm">
         <input type="hidden" name="formType" value="signup">
         <input type="hidden" name="role" value="manager">
@@ -133,11 +138,11 @@
         <div class="form-row">
           <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required>
         </div>
+
         <div class="form-row">
           <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required>
         </div>
 
-        <!-- فیلد انتخاب نوع شغل -->
         <div class="form-row">
           <select id="job_type" name="job_type_id" required>
             <option value="">در حال بارگذاری نوع شغل...</option>
@@ -147,12 +152,15 @@
         <div class="form-row">
           <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
         </div>
+
         <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (انگلیسی)" required>
+          <input id="email" name="email" type="email" placeholder="ایمیل (اختیاری)">
         </div>
+
         <div class="form-row">
           <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
         </div>
+
         <div class="form-row">
           <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
         </div>
@@ -168,8 +176,6 @@
 
   <script>
     const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-
-    // ❗❗ این URL را بعداً با وبهوک n8n مخصوص لیست مشاغل جایگزین کن
     const JOBS_WEBHOOK_URL = "https://masoudgeramiyan.app.n8n.cloud/webhook-test/34516f40-9591-4e7e-9a87-5d2a21dd9703";
 
     const $ = id => document.getElementById(id);
@@ -197,7 +203,6 @@
       if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
     };
 
-    // --- بارگذاری لیست شغل‌ها از n8n ---
     async function loadJobTypes(){
       const select = $("job_type");
       select.innerHTML = '<option>در حال بارگذاری...</option>';
@@ -226,47 +231,3 @@
         select.innerHTML = '<option>خطا در دریافت لیست از سرور</option>';
       }
     }
-
-    // --- ارسال فرم ---
-    async function submitForm(form){
-      const btn=form.querySelector(".submit");
-      btn.disabled=true;
-      btn.classList.add("loading");
-      const originalText=btn.textContent;
-      btn.innerHTML='<div class="spinner"></div> لطفاً صبر کنید...';
-      const fm=new FormData(form);
-      try{
-        const res=await fetch(WEBHOOK_URL,{method:"POST",body:fm});
-        const data=await res.json();
-        if(res.ok){
-          showToast({type:"success",text:data.message||"عملیات موفق!"});
-          form.reset();
-          signupModal.classList.remove("show");
-          loginModal.classList.remove("show");
-        }else showToast({text:data.message||"خطا در انجام عملیات"});
-      }catch{
-        showToast({text:"خطا در ارتباط با سرور"});
-      }
-      btn.disabled=false;
-      btn.classList.remove("loading");
-      btn.textContent=originalText;
-    }
-
-    signupForm.onsubmit=e=>{
-      e.preventDefault();
-      const pass=$("password").value.trim();
-      const confirm=$("confirmPassword").value.trim();
-      if(pass!==confirm){
-        showToast({text:"رمز عبور و تکرار آن یکسان نیست!"});
-        return;
-      }
-      submitForm(e.target);
-    };
-
-    loginForm.onsubmit=e=>{
-      e.preventDefault();
-      submitForm(e.target);
-    };
-  </script>
-</body>
-</html>
