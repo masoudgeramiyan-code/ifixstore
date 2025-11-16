@@ -7,9 +7,15 @@
 
   <style>
     :root {
-      --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#43a047;
-      --muted:#6b7280;--danger:#f44336;--success:#2d9c3a;
-      --radius:12px;--shadow:0 8px 26px rgba(20,20,30,0.08);
+      --bg:#eef1f4;
+      --card:#ffffff;
+      --accent:#4CAF50;
+      --accent-2:#43a047;
+      --muted:#6b7280;
+      --danger:#f44336;
+      --success:#2d9c3a;
+      --radius:14px;
+      --shadow:0 8px 28px rgba(20,20,30,0.12);
       font-family:"Vazirmatn",sans-serif;
     }
 
@@ -29,7 +35,7 @@
 
     .card {
       background:var(--card);
-      padding:32px 28px;
+      padding:36px 34px;
       width:380px;
       max-width:95%;
       border-radius:var(--radius);
@@ -38,30 +44,30 @@
       transition:.25s;
     }
 
-    h1 {margin-bottom:8px;font-size:22px;color:#333}
+    h1 {margin-bottom:12px;font-size:23px;color:#333}
 
-    .btns {display:flex;gap:12px;margin:18px 0 8px}
+    .btns {display:flex;gap:14px;margin:20px 0 10px}
     button.btn {
       flex:1;
-      padding:10px;
+      padding:12px 10px;
       border:none;
-      border-radius:10px;
+      border-radius:12px;
       font-weight:600;
       cursor:pointer;
       background:var(--accent);
       color:#fff;
+      font-size:15px;
       transition:.25s;
     }
     .btn.secondary {background:#0277bd;}
+    button.btn:hover {opacity:0.92; transform:translateY(-1px);}
 
-    button.btn:hover {opacity:0.9;}
-
-    /* MODALS */
+    /* -------- MODALS -------- */
     .modal {
       display:none;
       position:fixed;
       inset:0;
-      background:rgba(0,0,0,.35);
+      background:rgba(0,0,0,.45);
       justify-content:center;
       align-items:center;
       opacity:0;
@@ -78,8 +84,8 @@
     .modal-card {
       background:#fff;
       width:100%;
-      max-width:420px;
-      padding:24px;
+      max-width:460px;
+      padding:30px;
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       animation:fadeIn .3s ease;
@@ -87,54 +93,67 @@
     }
 
     @keyframes fadeIn {
-      from {opacity:0; transform:translateY(20px);}
+      from {opacity:0; transform:translateY(25px);}
       to {opacity:1; transform:translateY(0);}
     }
 
     .close {
       position:absolute;
-      top:10px;
-      left:14px;
+      top:12px;
+      left:16px;
       border:none;
-      font-size:24px;
+      font-size:26px;
       background:none;
       cursor:pointer;
       color:#666;
+      transition:.2s;
+    }
+    .close:hover {color:#000;}
+
+    .form-row {
+      margin:16px 0;
     }
 
-    .form-row {margin:10px 0;}
     input, select {
       width:100%;
-      padding:11px;
-      border:1px solid #ccc;
-      border-radius:8px;
-      background:#fafafa;
+      padding:15px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      background:#f9fafb;
       font-size:15px;
       transition:.2s;
     }
+
+    input:hover, select:hover {
+      background:#fff;
+    }
+
     input:focus, select:focus {
       border-color:var(--accent);
       background:#fff;
-      box-shadow:0 0 0 3px rgba(76,175,80,.15);
+      box-shadow:0 0 0 4px rgba(76,175,80,.18);
     }
 
     button.submit {
       width:100%;
-      padding:12px;
+      padding:14px;
       border:none;
-      border-radius:8px;
+      border-radius:12px;
       background:var(--accent);
       color:#fff;
+      font-size:16px;
       font-weight:600;
-      margin-top:8px;
+      margin-top:10px;
       cursor:pointer;
       transition:.25s;
     }
 
-    .submit.loading {opacity:0.7;cursor:not-allowed;}
+    button.submit:hover {opacity:0.93; transform:translateY(-1px);}
+
+    .submit.loading {opacity:0.65;cursor:not-allowed;}
 
     .spinner {
-      width:16px;height:16px;
+      width:18px;height:18px;
       border:2px solid rgba(255,255,255,.5);
       border-top-color:#fff;
       border-radius:50%;
@@ -142,7 +161,7 @@
     }
     @keyframes spin {to{transform:rotate(360deg)}}
 
-    /* TOAST */
+    /* -------- TOAST -------- */
     .toast-wrap {
       position:fixed;
       bottom:28px;
@@ -151,8 +170,8 @@
       z-index:2000;
     }
     .toast {
-      padding:12px 14px;
-      border-radius:10px;
+      padding:14px 16px;
+      border-radius:12px;
       color:#fff;
       font-weight:600;
       min-width:260px;
@@ -160,6 +179,7 @@
       text-align:center;
       opacity:0;
       transition:.25s;
+      font-size:15px;
     }
     .toast.show {opacity:1; transform:translateY(-5px);}
     .toast.success {background:#2d9c3a;}
@@ -267,6 +287,10 @@
     t._t = setTimeout(() => t.classList.remove("show"), 3500);
   }
 
+  /* FIX: GET MODALS PROPERLY */
+  const loginModal = $("loginModal");
+  const signupModal = $("signupModal");
+
   /* --- OPEN / CLOSE MODALS --- */
   $("loginBtn").onclick = () => {
     signupModal.classList.remove("show");
@@ -281,13 +305,8 @@
     loadJobTypes();
   };
 
-  $("closeLogin").onclick = () => {
-    loginModal.classList.remove("show");
-  };
-
-  $("closeSignup").onclick = () => {
-    signupModal.classList.remove("show");
-  };
+  $("closeLogin").onclick = () => loginModal.classList.remove("show");
+  $("closeSignup").onclick = () => signupModal.classList.remove("show");
 
   window.onclick = e => {
     if (e.target === loginModal) loginModal.classList.remove("show");
@@ -311,18 +330,17 @@
         opt.textContent = job.name;
         select.appendChild(opt);
       });
-
-    } catch (err) {
+    } catch {
       select.innerHTML = "<option>خطا در دریافت اطلاعات</option>";
     }
   }
 
-  /* --- VALIDATE PHONE --- */
+  /* PHONE VALIDATION */
   function isValidPhone(p) {
-    return /^09\d{9}$/.test(p); // فقط شماره ایرانی معتبر
+    return /^09\d{9}$/.test(p);
   }
 
-  /* --- FORM SUBMIT HANDLER --- */
+  /* SUBMITTER */
   async function submitForm(form) {
     const btn = form.querySelector(".submit");
     btn.disabled = true;
@@ -343,19 +361,16 @@
       } else {
         showToast("error", data.message || "خطا در انجام عملیات");
       }
-
     } catch {
       showToast("error", "خطا در ارتباط با سرور");
     }
 
     btn.disabled = false;
     btn.classList.remove("loading");
-    btn.textContent = form.getAttribute("id") === "loginForm"
-        ? "ورود"
-        : "ثبت نام";
+    btn.textContent = form.id === "loginForm" ? "ورود" : "ثبت نام";
   }
 
-  /* --- SIGNUP --- */
+  /* SIGNUP */
   $("signupForm").onsubmit = e => {
     e.preventDefault();
 
@@ -372,7 +387,7 @@
     submitForm(e.target);
   };
 
-  /* --- LOGIN --- */
+  /* LOGIN */
   $("loginForm").onsubmit = e => {
     e.preventDefault();
 
@@ -382,7 +397,6 @@
 
     submitForm(e.target);
   };
-
 </script>
 
 </body>
