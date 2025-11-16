@@ -2,232 +2,388 @@
 <html lang="fa">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ورود / ثبت نام</title>
+
   <style>
-    :root{
+    :root {
       --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#43a047;
       --muted:#6b7280;--danger:#f44336;--success:#2d9c3a;
-      --radius:10px;--shadow:0 6px 18px rgba(20,20,30,0.08);
+      --radius:12px;--shadow:0 8px 26px rgba(20,20,30,0.08);
       font-family:"Vazirmatn",sans-serif;
     }
-    html,body{height:100%;margin:0;background:var(--bg);direction:rtl}
-    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      box-shadow:var(--shadow);
-      padding:32px 28px;
-      width:380px;max-width:95%;
-      text-align:center;
-      transition:all .3s ease;
-    }
-    .card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,20,30,0.1);}
-    h1{margin:0 0 12px;font-size:22px;color:#333}
-    .btns{display:flex;gap:12px;justify-content:center;margin:18px 0 8px}
-    button.btn{
-      flex:1;padding:10px 12px;border-radius:8px;border:none;
-      background:var(--accent);color:#fff;cursor:pointer;font-weight:600;
-      transition:all .2s ease;font-size:15px;
-    }
-    button.btn.secondary{background:#0ea5a5}
-    button.btn:hover{background:var(--accent-2)}
-    button.btn:active{transform:translateY(1px)}
-    .hint{color:var(--muted);font-size:13px;margin-top:6px}
 
-    .modal{display:none;position:fixed;z-index:1200;left:0;top:0;width:100%;height:100%;
-      background:rgba(0,0,0,0.35);align-items:center;justify-content:center;padding:20px;
-      opacity:0;transition:opacity .25s ease;}
-    .modal.show{display:flex;opacity:1;}
-    .modal-card{
-      width:100%;max-width:420px;background:var(--card);
-      border-radius:var(--radius);padding:24px 22px;
-      box-shadow:var(--shadow);position:relative;
-      animation:fadeInUp .3s ease forwards;
+    body {
+      margin:0;
+      background:var(--bg);
+      direction:rtl;
     }
-    @keyframes fadeInUp{
-      from{transform:translateY(30px);opacity:0;}
-      to{transform:translateY(0);opacity:1;}
+
+    .wrap {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
     }
-    .modal .close{
-      position:absolute;left:14px;top:10px;color:#999;font-size:22px;
-      border:none;background:transparent;cursor:pointer;
-      transition:color .2s ease;
+
+    .card {
+      background:var(--card);
+      padding:32px 28px;
+      width:380px;
+      max-width:95%;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      text-align:center;
+      transition:.25s;
     }
-    .modal .close:hover{color:#000}
-    .modal-card h2{margin:0 0 10px;font-size:18px;color:#333}
-    .form-row{margin:10px 0}
-    input[type="text"],input[type="email"],input[type="password"],select{
-      width:100%;padding:10px;border-radius:8px;
-      border:1px solid #e5e7eb;font-size:14px;box-sizing:border-box;
-      transition:all .2s ease;background:#fafafa;
+
+    h1 {margin-bottom:8px;font-size:22px;color:#333}
+
+    .btns {display:flex;gap:12px;margin:18px 0 8px}
+    button.btn {
+      flex:1;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      background:var(--accent);
+      color:#fff;
+      transition:.25s;
     }
-    input:focus,select:focus{
-      outline:none;border-color:var(--accent);
-      box-shadow:0 0 0 3px rgba(76,175,80,0.15);
+    .btn.secondary {background:#0277bd;}
+
+    button.btn:hover {opacity:0.9;}
+
+    /* MODALS */
+    .modal {
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.35);
+      justify-content:center;
+      align-items:center;
+      opacity:0;
+      transition:.25s;
+      padding:20px;
+      z-index:9999;
+    }
+
+    .modal.show {
+      display:flex;
+      opacity:1;
+    }
+
+    .modal-card {
       background:#fff;
+      width:100%;
+      max-width:420px;
+      padding:24px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      animation:fadeIn .3s ease;
+      position:relative;
     }
-    .submit{
-      margin-top:10px;padding:10px;border-radius:8px;border:none;
-      background:var(--accent);color:#fff;width:100%;
-      cursor:pointer;font-weight:600;transition:all .2s ease;
-      display:flex;align-items:center;justify-content:center;gap:8px;
+
+    @keyframes fadeIn {
+      from {opacity:0; transform:translateY(20px);}
+      to {opacity:1; transform:translateY(0);}
     }
-    .submit:hover{background:var(--accent-2)}
-    .submit.loading{opacity:0.8;cursor:not-allowed;}
-    .spinner{
-      width:16px;height:16px;border:2px solid rgba(255,255,255,0.6);
-      border-top-color:#fff;border-radius:50%;
+
+    .close {
+      position:absolute;
+      top:10px;
+      left:14px;
+      border:none;
+      font-size:24px;
+      background:none;
+      cursor:pointer;
+      color:#666;
+    }
+
+    .form-row {margin:10px 0;}
+    input, select {
+      width:100%;
+      padding:11px;
+      border:1px solid #ccc;
+      border-radius:8px;
+      background:#fafafa;
+      font-size:15px;
+      transition:.2s;
+    }
+    input:focus, select:focus {
+      border-color:var(--accent);
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(76,175,80,.15);
+    }
+
+    button.submit {
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:8px;
+      background:var(--accent);
+      color:#fff;
+      font-weight:600;
+      margin-top:8px;
+      cursor:pointer;
+      transition:.25s;
+    }
+
+    .submit.loading {opacity:0.7;cursor:not-allowed;}
+
+    .spinner {
+      width:16px;height:16px;
+      border:2px solid rgba(255,255,255,.5);
+      border-top-color:#fff;
+      border-radius:50%;
       animation:spin 1s linear infinite;
     }
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .toast-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;z-index:2000}
-    .toast{min-width:280px;max-width:90vw;padding:12px 14px;border-radius:10px;color:#fff;
-      display:flex;align-items:center;gap:10px;box-shadow:0 6px 20px rgba(0,0,0,0.12);
-      font-weight:600;font-size:14px;opacity:0;pointer-events:none;
-      transition:all .28s ease;}
-    .toast.show{opacity:1;pointer-events:auto;transform:translateY(-6px)}
-    .toast.error{background:linear-gradient(90deg,#d64545,#f44336)}
-    .toast.success{background:linear-gradient(90deg,#28a745,#2d9c3a)}
+    @keyframes spin {to{transform:rotate(360deg)}}
+
+    /* TOAST */
+    .toast-wrap {
+      position:fixed;
+      bottom:28px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:2000;
+    }
+    .toast {
+      padding:12px 14px;
+      border-radius:10px;
+      color:#fff;
+      font-weight:600;
+      min-width:260px;
+      max-width:90vw;
+      text-align:center;
+      opacity:0;
+      transition:.25s;
+    }
+    .toast.show {opacity:1; transform:translateY(-5px);}
+    .toast.success {background:#2d9c3a;}
+    .toast.error {background:#e53935;}
+
   </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>ورود یا ثبت نام</h1>
-      <div class="btns">
-        <button id="loginBtn" class="btn">ورود</button>
-        <button id="signupBtn" class="btn secondary">ثبت نام</button>
+<div class="wrap">
+  <div class="card">
+    <h1>ورود یا ثبت نام</h1>
+
+    <div class="btns">
+      <button id="loginBtn" class="btn">ورود</button>
+      <button id="signupBtn" class="btn secondary">ثبت نام</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="loginModal" class="modal">
+  <div class="modal-card">
+    <button class="close" id="closeLogin">&times;</button>
+    <h2>ورود</h2>
+
+    <form id="loginForm">
+      <input type="hidden" name="formType" value="login">
+
+      <div class="form-row">
+        <input id="login_phone" name="phone" type="text" placeholder="شماره تماس" required>
       </div>
-      <div class="hint">از دکمه‌ها استفاده کنید تا فرم مناسب باز شود.</div>
-    </div>
+
+      <div class="form-row">
+        <input id="login_password" name="password" type="password" placeholder="رمز عبور" required minlength="6">
+      </div>
+
+      <button class="submit" type="submit">ورود</button>
+    </form>
   </div>
+</div>
 
-  <!-- Login Modal -->
-  <div id="loginModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeLogin">&times;</button>
-      <h2>ورود به حساب کاربری</h2>
+<!-- SIGNUP MODAL -->
+<div id="signupModal" class="modal">
+  <div class="modal-card">
+    <button class="close" id="closeSignup">&times;</button>
+    <h2>ثبت نام</h2>
 
-      <form id="loginForm">
-        <input type="hidden" name="formType" value="login">
+    <form id="signupForm">
+      <input type="hidden" name="formType" value="signup">
+      <input type="hidden" name="role" value="manager">
 
-        <div class="form-row">
-          <input name="phone" type="text" placeholder="شماره تماس" required>
-        </div>
+      <div class="form-row">
+        <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
+      </div>
 
-        <div class="form-row">
-          <input name="password" type="password" placeholder="رمز عبور" required minlength="6">
-        </div>
+      <div class="form-row">
+        <input id="phone" name="phone" type="text" placeholder="شماره تماس" required>
+      </div>
 
-        <button class="submit" type="submit">ورود</button>
-      </form>
-    </div>
+      <div class="form-row">
+        <select id="job_type" name="job_type_id" required>
+          <option value="">در حال بارگذاری...</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
+      </div>
+
+      <div class="form-row">
+        <input id="email" name="email" type="email" placeholder="ایمیل (اختیاری)">
+      </div>
+
+      <div class="form-row">
+        <input id="password" name="password" type="password" placeholder="رمز عبور" required minlength="6">
+      </div>
+
+      <div class="form-row">
+        <input id="confirmPassword" type="password" placeholder="تکرار رمز عبور" required minlength="6">
+      </div>
+
+      <button class="submit" type="submit">ثبت نام</button>
+    </form>
   </div>
+</div>
 
-  <!-- Signup Modal -->
-  <div id="signupModal" class="modal">
-    <div class="modal-card">
-      <button class="close" id="closeSignup">&times;</button>
-      <h2>ثبت نام</h2>
+<div class="toast-wrap">
+  <div id="toast" class="toast"></div>
+</div>
 
-      <form id="signupForm">
-        <input type="hidden" name="formType" value="signup">
-        <input type="hidden" name="role" value="manager">
+<script>
+  const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
+  const JOBS_WEBHOOK_URL = "https://masoudgeramiyan.app.n8n.cloud/webhook-test/34516f40-9591-4e7e-9a87-5d2a21dd9703";
 
-        <div class="form-row">
-          <input id="fullname" name="fullname" type="text" placeholder="نام کامل (فقط فارسی)" required>
-        </div>
+  const $ = id => document.getElementById(id);
 
-        <div class="form-row">
-          <input id="phone" name="phone" type="text" placeholder="شماره تماس (فقط عدد انگلیسی)" required>
-        </div>
+  /* TOAST */
+  function showToast(type, text) {
+    const t = $("toast");
+    t.className = "toast " + (type === "success" ? "success" : "error");
+    t.textContent = text;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove("show"), 3500);
+  }
 
-        <div class="form-row">
-          <select id="job_type" name="job_type_id" required>
-            <option value="">در حال بارگذاری نوع شغل...</option>
-          </select>
-        </div>
+  /* --- OPEN / CLOSE MODALS --- */
+  $("loginBtn").onclick = () => {
+    signupModal.classList.remove("show");
+    $("signupForm").reset();
+    loginModal.classList.add("show");
+  };
 
-        <div class="form-row">
-          <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
-        </div>
+  $("signupBtn").onclick = () => {
+    loginModal.classList.remove("show");
+    $("loginForm").reset();
+    signupModal.classList.add("show");
+    loadJobTypes();
+  };
 
-        <div class="form-row">
-          <input id="email" name="email" type="email" placeholder="ایمیل (اختیاری)">
-        </div>
+  $("closeLogin").onclick = () => {
+    loginModal.classList.remove("show");
+  };
 
-        <div class="form-row">
-          <input id="password" name="password" type="password" placeholder="رمز عبور" minlength="6" required>
-        </div>
+  $("closeSignup").onclick = () => {
+    signupModal.classList.remove("show");
+  };
 
-        <div class="form-row">
-          <input id="confirmPassword" type="password" placeholder="تأیید رمز عبور" minlength="6" required>
-        </div>
+  window.onclick = e => {
+    if (e.target === loginModal) loginModal.classList.remove("show");
+    if (e.target === signupModal) signupModal.classList.remove("show");
+  };
 
-        <button class="submit" type="submit">ثبت نام</button>
-      </form>
-    </div>
-  </div>
+  /* --- LOAD JOB TYPES --- */
+  async function loadJobTypes() {
+    const select = $("job_type");
+    select.innerHTML = "<option>در حال بارگذاری...</option>";
 
-  <div class="toast-wrap">
-    <div id="toast" class="toast"><span id="toastText"></span></div>
-  </div>
+    try {
+      const res = await fetch(JOBS_WEBHOOK_URL);
+      const data = await res.json();
 
-  <script>
-    const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-    const JOBS_WEBHOOK_URL = "https://masoudgeramiyan.app.n8n.cloud/webhook-test/34516f40-9591-4e7e-9a87-5d2a21dd9703";
+      select.innerHTML = '<option value="">نوع شغل را انتخاب کنید</option>';
 
-    const $ = id => document.getElementById(id);
+      data.forEach(job => {
+        const opt = document.createElement("option");
+        opt.value = job.id;
+        opt.textContent = job.name;
+        select.appendChild(opt);
+      });
 
-    function showToast({type="error", text="", timeout=3500}){
-      const t=$("toast");
-      t.className="toast "+(type==="success"?"success":"error");
-      $("toastText").textContent=text;
-      t.classList.add("show");
-      clearTimeout(t._t);
-      t._t=setTimeout(()=>t.classList.remove("show"),timeout);
+    } catch (err) {
+      select.innerHTML = "<option>خطا در دریافت اطلاعات</option>";
     }
+  }
 
-    const loginModal=$("loginModal"),signupModal=$("signupModal");
-    const loginForm=$("loginForm"),signupForm=$("signupForm");
+  /* --- VALIDATE PHONE --- */
+  function isValidPhone(p) {
+    return /^09\d{9}$/.test(p); // فقط شماره ایرانی معتبر
+  }
 
-    $("loginBtn").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();loginModal.classList.add("show");};
-    $("signupBtn").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();signupModal.classList.add("show");loadJobTypes();};
+  /* --- FORM SUBMIT HANDLER --- */
+  async function submitForm(form) {
+    const btn = form.querySelector(".submit");
+    btn.disabled = true;
+    btn.classList.add("loading");
+    btn.innerHTML = '<div class="spinner"></div>';
 
-    $("closeLogin").onclick=()=>{loginModal.classList.remove("show");loginForm.reset();};
-    $("closeSignup").onclick=()=>{signupModal.classList.remove("show");signupForm.reset();};
+    const fd = new FormData(form);
 
-    window.onclick=(e)=>{
-      if(e.target===loginModal){loginModal.classList.remove("show");loginForm.reset();}
-      if(e.target===signupModal){signupModal.classList.remove("show");signupForm.reset();}
-    };
+    try {
+      const res = await fetch(WEBHOOK_URL, { method: "POST", body: fd });
+      const data = await res.json();
 
-    async function loadJobTypes(){
-      const select = $("job_type");
-      select.innerHTML = '<option>در حال بارگذاری...</option>';
-
-      try {
-        const res = await fetch(JOBS_WEBHOOK_URL);
-        const data = await res.json();
-
-        select.innerHTML = "";
-
-        if (Array.isArray(data) && data.length) {
-          select.innerHTML = '<option value="">انتخاب نوع شغل</option>';
-
-          data.forEach(job => {
-            const opt = document.createElement("option");
-            opt.value = job.id;
-            opt.textContent = job.name;
-            select.appendChild(opt);
-          });
-
-        } else {
-          select.innerHTML = '<option>لیست مشاغل خالی است</option>';
-        }
-      } catch (err) {
-        console.error(err);
-        select.innerHTML = '<option>خطا در دریافت لیست از سرور</option>';
+      if (res.ok) {
+        showToast("success", data.message || "موفقیت آمیز!");
+        form.reset();
+        loginModal.classList.remove("show");
+        signupModal.classList.remove("show");
+      } else {
+        showToast("error", data.message || "خطا در انجام عملیات");
       }
+
+    } catch {
+      showToast("error", "خطا در ارتباط با سرور");
     }
+
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    btn.textContent = form.getAttribute("id") === "loginForm"
+        ? "ورود"
+        : "ثبت نام";
+  }
+
+  /* --- SIGNUP --- */
+  $("signupForm").onsubmit = e => {
+    e.preventDefault();
+
+    const phone = $("phone").value.trim();
+    const pass = $("password").value.trim();
+    const cpass = $("confirmPassword").value.trim();
+
+    if (!isValidPhone(phone))
+      return showToast("error", "شماره تماس نامعتبر است (مثال: 09123456789)");
+
+    if (pass !== cpass)
+      return showToast("error", "رمز عبور و تکرار آن یکسان نیست!");
+
+    submitForm(e.target);
+  };
+
+  /* --- LOGIN --- */
+  $("loginForm").onsubmit = e => {
+    e.preventDefault();
+
+    const phone = $("login_phone").value.trim();
+    if (!isValidPhone(phone))
+      return showToast("error", "شماره تماس نامعتبر است");
+
+    submitForm(e.target);
+  };
+
+</script>
+
+</body>
+</html>
