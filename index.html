@@ -2,388 +2,220 @@
 <html lang="fa">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ورود / ثبت نام</title>
 
   <style>
-    :root {
-      --bg:#f4f6f8;--card:#ffffff;--accent:#4CAF50;--accent-2:#43a047;
-      --muted:#6b7280;--danger:#f44336;--success:#2d9c3a;
-      --radius:12px;--shadow:0 8px 26px rgba(20,20,30,0.08);
-      font-family:"Vazirmatn",sans-serif;
-    }
-
     body {
-      margin:0;
-      background:var(--bg);
-      direction:rtl;
+      font-family: sans-serif;
+      background: #f2f4f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      direction: rtl;
     }
 
-    .wrap {
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
+    .container {
+      text-align: center;
     }
 
-    .card {
-      background:var(--card);
-      padding:32px 28px;
-      width:380px;
-      max-width:95%;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      text-align:center;
-      transition:.25s;
+    button.main-btn {
+      padding: 12px 28px;
+      background: #4CAF50;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      color: #fff;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.2s;
+    }
+    button.main-btn:hover {
+      background: #43a047;
+      transform: translateY(-2px);
     }
 
-    h1 {margin-bottom:8px;font-size:22px;color:#333}
-
-    .btns {display:flex;gap:12px;margin:18px 0 8px}
-    button.btn {
-      flex:1;
-      padding:10px;
-      border:none;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer;
-      background:var(--accent);
-      color:#fff;
-      transition:.25s;
-    }
-    .btn.secondary {background:#0277bd;}
-
-    button.btn:hover {opacity:0.9;}
-
-    /* MODALS */
+    /* ===== MODAL ===== */
     .modal {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.35);
-      justify-content:center;
-      align-items:center;
-      opacity:0;
-      transition:.25s;
-      padding:20px;
-      z-index:9999;
-    }
-
-    .modal.show {
-      display:flex;
-      opacity:1;
-    }
-
-    .modal-card {
-      background:#fff;
-      width:100%;
-      max-width:420px;
-      padding:24px;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      animation:fadeIn .3s ease;
-      position:relative;
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.4s ease;
     }
 
     @keyframes fadeIn {
-      from {opacity:0; transform:translateY(20px);}
-      to {opacity:1; transform:translateY(0);}
+      from { opacity: 0 }
+      to { opacity: 1 }
     }
 
-    .close {
-      position:absolute;
-      top:10px;
-      left:14px;
-      border:none;
-      font-size:24px;
-      background:none;
-      cursor:pointer;
-      color:#666;
+    .modal-content {
+      background: #fff;
+      padding: 30px;
+      width: 90%;
+      max-width: 380px;
+      border-radius: 18px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      animation: pop 0.3s ease;
     }
 
-    .form-row {margin:10px 0;}
-    input, select {
-      width:100%;
-      padding:11px;
-      border:1px solid #ccc;
-      border-radius:8px;
-      background:#fafafa;
-      font-size:15px;
-      transition:.2s;
-    }
-    input:focus, select:focus {
-      border-color:var(--accent);
-      background:#fff;
-      box-shadow:0 0 0 3px rgba(76,175,80,.15);
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0 }
+      to { transform: scale(1); opacity: 1 }
     }
 
-    button.submit {
-      width:100%;
-      padding:12px;
-      border:none;
-      border-radius:8px;
-      background:var(--accent);
-      color:#fff;
-      font-weight:600;
-      margin-top:8px;
-      cursor:pointer;
-      transition:.25s;
+    h2 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #333;
     }
 
-    .submit.loading {opacity:0.7;cursor:not-allowed;}
-
-    .spinner {
-      width:16px;height:16px;
-      border:2px solid rgba(255,255,255,.5);
-      border-top-color:#fff;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
+    .input-group {
+      margin-bottom: 18px;
+      text-align: right;
     }
-    @keyframes spin {to{transform:rotate(360deg)}}
 
-    /* TOAST */
-    .toast-wrap {
-      position:fixed;
-      bottom:28px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:2000;
+    label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 6px;
+      display: block;
     }
-    .toast {
-      padding:12px 14px;
-      border-radius:10px;
-      color:#fff;
-      font-weight:600;
-      min-width:260px;
-      max-width:90vw;
-      text-align:center;
-      opacity:0;
-      transition:.25s;
-    }
-    .toast.show {opacity:1; transform:translateY(-5px);}
-    .toast.success {background:#2d9c3a;}
-    .toast.error {background:#e53935;}
 
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d8d8d8;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 4px rgba(76,175,80,0.4);
+      outline: none;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: #4CAF50;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 5px;
+    }
+
+    button.submit-btn:hover {
+      background: #43a047;
+    }
+
+    .close-btn {
+      margin-top: 12px;
+      background: #ddd;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 10px;
+      cursor: pointer;
+    }
   </style>
+
 </head>
-
 <body>
-<div class="wrap">
-  <div class="card">
-    <h1>ورود یا ثبت نام</h1>
 
-    <div class="btns">
-      <button id="loginBtn" class="btn">ورود</button>
-      <button id="signupBtn" class="btn secondary">ثبت نام</button>
+  <div class="container">
+    <button class="main-btn" onclick="openModal('loginModal')">ورود</button>
+    <button class="main-btn" onclick="openModal('signupModal')">ثبت‌نام</button>
+  </div>
+
+  <!-- ===== LOGIN MODAL ===== -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <h2>ورود</h2>
+      <form id="loginForm">
+        <div class="input-group">
+          <label>ایمیل</label>
+          <input type="email" name="email" required>
+        </div>
+
+        <div class="input-group">
+          <label>رمز عبور</label>
+          <input type="password" name="password" required>
+        </div>
+
+        <input type="hidden" name="formType" value="login">
+
+        <button class="submit-btn" type="submit">ورود</button>
+        <button class="close-btn" type="button" onclick="closeModal('loginModal')">بستن</button>
+      </form>
     </div>
   </div>
-</div>
 
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="modal">
-  <div class="modal-card">
-    <button class="close" id="closeLogin">&times;</button>
-    <h2>ورود</h2>
+  <!-- ===== SIGNUP MODAL ===== -->
+  <div id="signupModal" class="modal">
+    <div class="modal-content">
+      <h2>ثبت‌نام</h2>
 
-    <form id="loginForm">
-      <input type="hidden" name="formType" value="login">
+      <form id="signupForm">
+        
+        <div class="input-group">
+          <label>نام و نام خانوادگی</label>
+          <input type="text" name="fullname" required>
+        </div>
 
-      <div class="form-row">
-        <input id="login_phone" name="phone" type="text" placeholder="شماره تماس" required>
-      </div>
+        <div class="input-group">
+          <label>ایمیل</label>
+          <input type="email" name="email" required>
+        </div>
 
-      <div class="form-row">
-        <input id="login_password" name="password" type="password" placeholder="رمز عبور" required minlength="6">
-      </div>
+        <div class="input-group">
+          <label>شماره تماس</label>
+          <input type="text" name="phone" required maxlength="11">
+        </div>
 
-      <button class="submit" type="submit">ورود</button>
-    </form>
+        <div class="input-group">
+          <label>رمز عبور</label>
+          <input type="password" name="password" required>
+        </div>
+
+        <input type="hidden" name="formType" value="signup">
+
+        <button class="submit-btn" type="submit">ثبت‌نام</button>
+        <button class="close-btn" type="button" onclick="closeModal('signupModal')">بستن</button>
+      </form>
+
+    </div>
   </div>
-</div>
 
-<!-- SIGNUP MODAL -->
-<div id="signupModal" class="modal">
-  <div class="modal-card">
-    <button class="close" id="closeSignup">&times;</button>
-    <h2>ثبت نام</h2>
-
-    <form id="signupForm">
-      <input type="hidden" name="formType" value="signup">
-      <input type="hidden" name="role" value="manager">
-
-      <div class="form-row">
-        <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
-      </div>
-
-      <div class="form-row">
-        <input id="phone" name="phone" type="text" placeholder="شماره تماس" required>
-      </div>
-
-      <div class="form-row">
-        <select id="job_type" name="job_type_id" required>
-          <option value="">در حال بارگذاری...</option>
-        </select>
-      </div>
-
-      <div class="form-row">
-        <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
-      </div>
-
-      <div class="form-row">
-        <input id="email" name="email" type="email" placeholder="ایمیل (اختیاری)">
-      </div>
-
-      <div class="form-row">
-        <input id="password" name="password" type="password" placeholder="رمز عبور" required minlength="6">
-      </div>
-
-      <div class="form-row">
-        <input id="confirmPassword" type="password" placeholder="تکرار رمز عبور" required minlength="6">
-      </div>
-
-      <button class="submit" type="submit">ثبت نام</button>
-    </form>
-  </div>
-</div>
-
-<div class="toast-wrap">
-  <div id="toast" class="toast"></div>
-</div>
-
-<script>
-  const WEBHOOK_URL = "https://carolina-emulsive-writerly.ngrok-free.dev/webhook-test/submit-form";
-  const JOBS_WEBHOOK_URL = "https://masoudgeramiyan.app.n8n.cloud/webhook-test/34516f40-9591-4e7e-9a87-5d2a21dd9703";
-
-  const $ = id => document.getElementById(id);
-
-  /* TOAST */
-  function showToast(type, text) {
-    const t = $("toast");
-    t.className = "toast " + (type === "success" ? "success" : "error");
-    t.textContent = text;
-    t.classList.add("show");
-    clearTimeout(t._t);
-    t._t = setTimeout(() => t.classList.remove("show"), 3500);
-  }
-
-  /* --- OPEN / CLOSE MODALS --- */
-  $("loginBtn").onclick = () => {
-    signupModal.classList.remove("show");
-    $("signupForm").reset();
-    loginModal.classList.add("show");
-  };
-
-  $("signupBtn").onclick = () => {
-    loginModal.classList.remove("show");
-    $("loginForm").reset();
-    signupModal.classList.add("show");
-    loadJobTypes();
-  };
-
-  $("closeLogin").onclick = () => {
-    loginModal.classList.remove("show");
-  };
-
-  $("closeSignup").onclick = () => {
-    signupModal.classList.remove("show");
-  };
-
-  window.onclick = e => {
-    if (e.target === loginModal) loginModal.classList.remove("show");
-    if (e.target === signupModal) signupModal.classList.remove("show");
-  };
-
-  /* --- LOAD JOB TYPES --- */
-  async function loadJobTypes() {
-    const select = $("job_type");
-    select.innerHTML = "<option>در حال بارگذاری...</option>";
-
-    try {
-      const res = await fetch(JOBS_WEBHOOK_URL);
-      const data = await res.json();
-
-      select.innerHTML = '<option value="">نوع شغل را انتخاب کنید</option>';
-
-      data.forEach(job => {
-        const opt = document.createElement("option");
-        opt.value = job.id;
-        opt.textContent = job.name;
-        select.appendChild(opt);
-      });
-
-    } catch (err) {
-      select.innerHTML = "<option>خطا در دریافت اطلاعات</option>";
+  <script>
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
     }
-  }
 
-  /* --- VALIDATE PHONE --- */
-  function isValidPhone(p) {
-    return /^09\d{9}$/.test(p); // فقط شماره ایرانی معتبر
-  }
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
 
-  /* --- FORM SUBMIT HANDLER --- */
-  async function submitForm(form) {
-    const btn = form.querySelector(".submit");
-    btn.disabled = true;
-    btn.classList.add("loading");
-    btn.innerHTML = '<div class="spinner"></div>';
+    // ===== PHONE VALIDATION =====
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
+      const phone = this.phone.value;
 
-    const fd = new FormData(form);
-
-    try {
-      const res = await fetch(WEBHOOK_URL, { method: "POST", body: fd });
-      const data = await res.json();
-
-      if (res.ok) {
-        showToast("success", data.message || "موفقیت آمیز!");
-        form.reset();
-        loginModal.classList.remove("show");
-        signupModal.classList.remove("show");
-      } else {
-        showToast("error", data.message || "خطا در انجام عملیات");
+      if (!/^09\d{9}$/.test(phone)) {
+        alert("شماره تماس باید با 09 شروع شود و 11 رقم باشد");
+        e.preventDefault();
       }
-
-    } catch {
-      showToast("error", "خطا در ارتباط با سرور");
-    }
-
-    btn.disabled = false;
-    btn.classList.remove("loading");
-    btn.textContent = form.getAttribute("id") === "loginForm"
-        ? "ورود"
-        : "ثبت نام";
-  }
-
-  /* --- SIGNUP --- */
-  $("signupForm").onsubmit = e => {
-    e.preventDefault();
-
-    const phone = $("phone").value.trim();
-    const pass = $("password").value.trim();
-    const cpass = $("confirmPassword").value.trim();
-
-    if (!isValidPhone(phone))
-      return showToast("error", "شماره تماس نامعتبر است (مثال: 09123456789)");
-
-    if (pass !== cpass)
-      return showToast("error", "رمز عبور و تکرار آن یکسان نیست!");
-
-    submitForm(e.target);
-  };
-
-  /* --- LOGIN --- */
-  $("loginForm").onsubmit = e => {
-    e.preventDefault();
-
-    const phone = $("login_phone").value.trim();
-    if (!isValidPhone(phone))
-      return showToast("error", "شماره تماس نامعتبر است");
-
-    submitForm(e.target);
-  };
-
-</script>
+    });
+  </script>
 
 </body>
 </html>
