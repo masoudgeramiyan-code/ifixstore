@@ -179,10 +179,10 @@ input:focus, select:focus {
     /* -------- TOAST -------- */
     .toast-wrap {
       position:fixed;
-      bottom:28px;
+      bottom:80px;
       left:50%;
       transform:translateX(-50%);
-      z-index:2000;
+      z-index:1000;
     }
     .toast {
       padding:14px 16px;
@@ -225,7 +225,7 @@ input:focus, select:focus {
       <input type="hidden" name="formType" value="login">
 
       <div class="form-row">
-        <input id="login_phone" name="phone" type="text" placeholder="شماره تماس" required>
+        <input id="login_phone" name="phone" type="text" placeholder="شماره تماس" required autocomplete="tel">
       </div>
 
       <div class="form-row">
