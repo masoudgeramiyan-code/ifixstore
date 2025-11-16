@@ -117,7 +117,7 @@
 }
 
 input, select {
-  width:92%;               /* ↓ عرض کمتر شد */
+  width:92%;
   padding:11px 12px;
   border:1px solid #d1d5db;
   border-radius:10px;
@@ -125,18 +125,19 @@ input, select {
   font-size:14px;
   transition:.2s;
 }
-    .form-row select {
-  width: 92%;           /* همان عرض input */
-  padding: 11px 12px;   /* همان padding */
-  height: 40px;         /* ارتفاع مشابه input */
-  font-size: 14px;      /* اندازه متن مشابه */
-  border-radius: 10px;  /* گردی گوشه مشابه */
+
+.form-row select {
+  width: 92%;           /* عرض مثل input */
+  padding: 0 12px;      /* فقط padding افقی */
+  height: 40px;         /* ارتفاع مثل input */
+  line-height: 1.4;     /* ارتفاع خط متن */
+  font-size: 14px;      /* اندازه متن */
+  border-radius: 10px;  /* گردی گوشه */
   border: 1px solid #d1d5db;
   background: #f9fafb;
   box-sizing: border-box;
-  appearance: none;     /* حذف فلش پیش‌فرض مرورگر */
+  appearance: none;     /* حذف فلش مرورگر */
 }
-
     
 input:hover, select:hover {
   background:#fff;
