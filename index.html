@@ -1,868 +1,140 @@
-<!DOCTYPE html>
-<html lang="fa">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ورود / ثبت نام</title>
 
-  <style>
-    :root {
-      --bg:#eef1f4;
-      --card:#ffffff;
-      --accent:#4CAF50;
-      --accent-2:#43a047;
-      --muted:#6b7280;
-      --danger:#f44336;
-      --success:#2d9c3a;
-      --radius:14px;
-      --shadow:0 8px 28px rgba(20,20,30,0.12);
-      font-family:"Vazirmatn",sans-serif;
-    }
-
-    body {
-      margin:0;
-      background:var(--bg);
-      direction:rtl;
-    }
-
-    .wrap {
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-    }
-
-    .card {
-      background:var(--card);
-      padding:36px 34px;
-      width:380px;
-      max-width:95%;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      text-align:center;
-      transition:.25s;
-    }
-
-    h1 {margin-bottom:12px;font-size:23px;color:#333}
-
-    .btns {display:flex;gap:14px;margin:20px 0 10px}
-    button.btn {
-      flex:1;
-      padding:12px 10px;
-      border:none;
-      border-radius:12px;
-      font-weight:600;
-      cursor:pointer;
-      background:var(--accent);
-      color:#fff;
-      font-size:15px;
-      transition:.25s;
-    }
-    .btn.secondary {background:#0277bd;}
-    button.btn:hover {opacity:0.92; transform:translateY(-1px);}
-
-    /* -------- MODALS -------- */
-    .modal {
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.45);
-      justify-content:center;
-      align-items:center;
-      opacity:0;
-      transition:.25s;
-      padding:20px;
-      z-index:9999;
-    }
-
-    .modal.show {
-      display:flex;
-      opacity:1;
-    }
-
-    .modal-card {
-      background:#fff;
-      width:90%;
-      max-width:400px;
-      padding:20px 24px;
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      animation:fadeIn .3s ease;
-      position:relative;
-    }
-
-    @keyframes fadeIn {
-      from {opacity:0; transform:translateY(25px);}
-      to {opacity:1; transform:translateY(0);}
-    }
-
-    .close {
-      position:absolute;
-      top:12px;
-      left:16px;
-      border:none;
-      font-size:26px;
-      background:none;
-      cursor:pointer;
-      color:#666;
-      transition:.2s;
-    }
-    .close:hover {color:#000;}
-
-    .form-row {
-  margin:16px 0;
-  display:flex;
-  justify-content:center;
-}
-
-input, select {
-  width:85%;
-  padding:8px 10px;
-  border:1px solid #d1d5db;
-  border-radius:10px;
-  background:#f9fafb;
-  font-size:13px;
-  transition:.2s;
-}
-
-.form-row select {
-  width: 91%;           /* عرض مثل input */
-  padding: 0 12px;      /* فقط padding افقی */
-  height: 36px;         /* ارتفاع مثل input */
-  line-height: 1.4;     /* ارتفاع خط متن */
-  font-size: 14px;      /* اندازه متن */
-  border-radius: 10px;  /* گردی گوشه */
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
-  box-sizing: border-box;
-  appearance: none;     /* حذف فلش مرورگر */
-}
-    
-input:hover, select:hover {
-  background:#fff;
-}
-
-input:focus, select:focus {
-  border-color:var(--accent);
-  background:#fff;
-  box-shadow:0 0 0 3px rgba(76,175,80,.15);
-}
-
-    button.submit {
-      width:100%;
-      padding:14px;
-      border:none;
-      border-radius:12px;
-      background:var(--accent);
-      color:#fff;
-      font-size:16px;
-      font-weight:600;
-      margin-top:10px;
-      cursor:pointer;
-      transition:.25s;
-    }
-
-    button.submit:hover {opacity:0.93; transform:translateY(-1px);}
-
-    .submit.loading {opacity:0.65;cursor:not-allowed;}
-
-    .spinner {
-      width:18px;height:18px;
-      border:2px solid rgba(255,255,255,.5);
-      border-top-color:#fff;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-    }
-    @keyframes spin {to{transform:rotate(360deg)}}
-
-    /* -------- TOAST -------- */
-    .toast-wrap {
-      position:fixed;
-      top:45px;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:11000;
-    }
-    .toast {
-      padding:14px 16px;
-      border-radius:12px;
-      color:#fff;
-      font-weight:600;
-      min-width:260px;
-      max-width:90vw;
-      text-align:center;
-      opacity:0;
-      transition:.25s;
-      font-size:15px;
-    }
-    .toast.show {opacity:1; transform:translateY(-5px);}
-    .toast.success {background:#2d9c3a;}
-    .toast.error {background:#e53935;}
-.input-error {
-  border: 2px solid #f44336 !important;
-  animation: shake 0.3s;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  20% { transform: translateX(-5px); }
-  40% { transform: translateX(5px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-  100% { transform: translateX(0); }
-}
-.farsi-warning {
-  position: absolute;
-  background: #f44336;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  top: 100%;   /* درست زیر فیلد */
-  left: 0;
-  transform: translateY(6px);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-}
-
-.farsi-warning.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.phone-warning {
-  position: absolute;
-  background: #f44336;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  top: 100%;
-  left: 0;
-  transform: translateY(6px);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-}
-
-.phone-warning.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.email-warning {
-  position: absolute;
-  background: #f44336;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  top: 100%;
-  left: 0;
-  transform: translateY(6px);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-}
-
-.email-warning.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.password-warning {
-  position: absolute;
-  background: #f44336;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  top: 100%;
-  left: 0;
-  transform: translateY(6px);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-}
-
-.password-warning.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.input-container {
-  position: relative;
-}
-
-.phone-warning {
-  position: absolute;
-  background: #f44336;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px;
-  top: 100%;
-  left: 0;
-  transform: translateY(6px);
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 10;
-}
-
-.phone-warning.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-  </style>
-</head>
-
-<body>
-<div class="wrap">
-  <div class="card">
-    <h1>ورود یا ثبت نام</h1>
-
-    <div class="btns">
-      <button id="loginBtn" class="btn">ورود</button>
-      <button id="signupBtn" class="btn secondary">ثبت نام</button>
-    </div>
-  </div>
-</div>
-
-<!-- LOGIN MODAL -->
-<div id="loginModal" class="modal">
-  <div class="modal-card">
-    <button class="close" id="closeLogin">&times;</button>
-    <h2>ورود</h2>
-
-    <form id="loginForm">
-      <input type="hidden" name="formType" value="login">
-
-      <div class="form-row input-container">
-  <input id="login_phone" name="phone" type="text" placeholder="شماره تماس" required autocomplete="tel">
-  <div id="loginPhoneWarning" class="phone-warning"></div>
-</div>
-
-      <div class="form-row input-container">
-  <input id="login_password" name="password" type="password" placeholder="رمز عبور" required minlength="8">
-  <div id="loginPasswordWarning" class="password-warning"></div>
-</div>
-
-
-      <button class="submit" type="submit">ورود</button>
-    </form>
-  </div>
-</div>
-
-<!-- SIGNUP MODAL -->
-<div id="signupModal" class="modal">
-  <div class="modal-card">
-    <button class="close" id="closeSignup">&times;</button>
-    <h2>ثبت نام</h2>
-
-    <form id="signupForm">
-      <input type="hidden" name="formType" value="signup">
-      <input type="hidden" name="role" value="manager">
-
-      <div class="form-row" style="position: relative;">
-  <input id="fullname" name="fullname" type="text" placeholder="نام کامل" required>
-  <div class="farsi-warning" id="fullnameWarning">فقط حروف فارسی مجاز است!</div>
-</div>
-
-      <div class="form-row" style="position: relative;">
-  <input id="phone" name="phone" type="text" placeholder="۰۹xxxxxxxxx" required value="09">
-  <div class="phone-warning" id="phoneWarning"></div>
-</div>
-
-      <div class="form-row">
-        <select id="job_type" name="job_type_id" required>
-          <option value="">در حال بارگذاری...</option>
-        </select>
-      </div>
-
-      <div class="form-row">
-        <input id="business_name" name="business_name" type="text" placeholder="نام کسب‌وکار" required>
-      </div>
-
-      <div class="form-row" style="position: relative;">
-  <input id="email" name="email" type="email" placeholder="ایمیل (اختیاری)">
-  <div id="emailWarning" class="email-warning"></div>
-</div>
-
-     <div class="form-row" style="position: relative;">
-  <input id="password" name="password" type="password" placeholder="رمز عبور" required minlength="8">
-  <div id="passwordWarning" class="password-warning"></div>
-</div>
-
-<div class="form-row" style="position: relative;">
-  <input id="confirmPassword" type="password" placeholder="تکرار رمز عبور" required minlength="8">
-  <div id="confirmPasswordWarning" class="password-warning"></div>
-</div>
-
-      <button class="submit" type="submit">ثبت نام</button>
-    </form>
-  </div>
-</div>
-
-<div class="toast-wrap">
-  <div id="toast" class="toast"></div>
-</div>
-
-<script>
-  const WEBHOOK_URL = "https://n8n2.modirplus.top/webhook/submit-form";
-  const JOBS_WEBHOOK_URL = "https://n8n2.modirplus.top/webhook/jobs";
-
-  const $ = id => document.getElementById(id);
-
-  /* TOAST */
-  function showToast(type, text) {
-    const t = $("toast");
-    t.className = "toast " + (type === "success" ? "success" : "error");
-    t.textContent = text;
-    t.classList.add("show");
-    clearTimeout(t._t);
-    t._t = setTimeout(() => t.classList.remove("show"), 3500);
-  }
-
-  /* FIX: GET MODALS PROPERLY */
-  const loginModal = $("loginModal");
-  const signupModal = $("signupModal");
-
-  /* --- OPEN / CLOSE MODALS --- */
-  $("loginBtn").onclick = () => {
-    signupModal.classList.remove("show");
-    $("signupForm").reset();
-    loginModal.classList.add("show");
-  };
-
-  $("signupBtn").onclick = () => {
-    loginModal.classList.remove("show");
-    $("loginForm").reset();
-    signupModal.classList.add("show");
-    loadJobTypes();
-  };
-
-  $("closeLogin").onclick = () => loginModal.classList.remove("show");
-  $("closeSignup").onclick = () => signupModal.classList.remove("show");
-
-  window.onclick = e => {
-    if (e.target === loginModal) loginModal.classList.remove("show");
-    if (e.target === signupModal) signupModal.classList.remove("show");
-  };
-
-  /* --- LOAD JOB TYPES --- */
-  async function loadJobTypes() {
-    const select = $("job_type");
-    select.innerHTML = "<option>در حال بارگذاری...</option>";
-
-    try {
-      const res = await fetch(JOBS_WEBHOOK_URL);
-      const data = await res.json();
-
-      select.innerHTML = '<option value="">نوع شغل را انتخاب کنید</option>';
-
-      data.forEach(job => {
-        const opt = document.createElement("option");
-        opt.value = job.id;
-        opt.textContent = job.name;
-        select.appendChild(opt);
-      });
-    } catch {
-      select.innerHTML = "<option>خطا در دریافت اطلاعات</option>";
-    }
-  }
-
-  /* PHONE VALIDATION */
-  function isValidPhone(p) {
-    return /^09\d{9}$/.test(p);
-  }
-
-  /* SUBMITTER */
-  async function submitForm(form) {
-    const btn = form.querySelector(".submit");
-    btn.disabled = true;
-    btn.classList.add("loading");
-    btn.innerHTML = '<div class="spinner"></div>';
-
-    const fd = new FormData(form);
-
-    try {
-      const res = await fetch(WEBHOOK_URL, { method: "POST", body: fd });
-      const data = await res.json();
-
-      if (res.ok) {
-        showToast("success", data.message || "موفقیت آمیز!");
-        form.reset();
-        loginModal.classList.remove("show");
-        signupModal.classList.remove("show");
-      } else {
-        showToast("error", data.message || "خطا در انجام عملیات");
-      }
-    } catch {
-      showToast("error", "خطا در ارتباط با سرور");
-    }
-
-    btn.disabled = false;
-    btn.classList.remove("loading");
-    btn.textContent = form.id === "loginForm" ? "ورود" : "ثبت نام";
-  }
-
-  /* SIGNUP */
-  $("signupForm").onsubmit = e => {
-    e.preventDefault();
-
-    const phone = $("phone").value.trim();
-    const pass = $("password").value.trim();
-    const cpass = $("confirmPassword").value.trim();
-
-    if (!isValidPhone(phone))
-      return showToast("error", "شماره تماس نامعتبر است (مثال: 09123456789)");
-
-    if (pass !== cpass)
-      return showToast("error", "رمز عبور و تکرار آن یکسان نیست!");
-
-    submitForm(e.target);
-  };
-
-  /* LOGIN */
-  $("loginForm").onsubmit = e => {
-    e.preventDefault();
-
-    const phone = $("login_phone").value.trim();
-    if (!isValidPhone(phone))
-      return showToast("error", "شماره تماس نامعتبر است");
-
-    submitForm(e.target);
-  };
-  const fullname = document.getElementById("fullname");
-const warning = document.getElementById("fullnameWarning");
-
-fullname.addEventListener("input", () => {
-  const oldValue = fullname.value;
-  const newValue = oldValue.replace(/[^آ-یٔ‌ء\s]/g, "");
-
-  if (oldValue !== newValue) {
-    fullname.value = newValue;
-
-    // افکت هشدار: قرمز + لرزش
-    fullname.classList.add("input-error");
-    setTimeout(() => fullname.classList.remove("input-error"), 300);
-
-    // نمایش هشدار متنی
-    warning.classList.add("show");
-    clearTimeout(warning._t);
-    warning._t = setTimeout(() => warning.classList.remove("show"), 2500);
-  }
-});
-const phoneInput = document.getElementById("phone");
-const phoneWarning = document.getElementById("phoneWarning");
-
-// شروع فیلد با 09
-phoneInput.addEventListener("focus", () => {
-  if (!phoneInput.value.startsWith("09")) phoneInput.value = "09";
-  setTimeout(() => phoneInput.setSelectionRange(2, 2), 0);
-});
-
-// تابع اعتبارسنجی شماره
-function validatePhone(showWarning = true) {
-  let val = phoneInput.value;
-
-  // همیشه شروع با 09
-  if (!val.startsWith("09")) val = "09" + val.replace(/^0+/, "");
-
-  // حذف همه کاراکترهای غیر اعداد انگلیسی
-  const filtered = val.replace(/[^0-9]/g, "");
-
-  // اعداد فارسی → تبدیل به انگلیسی
-  val = filtered;
-
-  phoneInput.value = val;
-
-  // اگر طول بیش از 11 رقم باشد
-  if (val.length > 11) {
-    if (showWarning) {
-      phoneInput.classList.add("input-error");
-      phoneWarning.textContent = "شماره نمی‌تواند بیشتر از ۱۱ رقم باشد!";
-      phoneWarning.classList.add("show");
-      clearTimeout(phoneWarning._t);
-      phoneWarning._t = setTimeout(() => phoneWarning.classList.remove("show"), 2500);
-    }
-    phoneInput.value = val.slice(0, 11);
-    setTimeout(() => phoneInput.setSelectionRange(phoneInput.value.length, phoneInput.value.length), 0);
-    return false;
-  }
-
-  return true;
-}
-
-// کنترل هنگام تایپ
-phoneInput.addEventListener("input", () => {
-  validatePhone(true);
-});
-
-// کنترل هنگام خروج از فیلد (اگر کمتر از 11 رقم باشد هشدار بده)
-phoneInput.addEventListener("blur", () => {
-  if (phoneInput.value.length < 11) {
-    phoneInput.classList.add("input-error");
-    phoneWarning.textContent = "شماره باید 11 رقم باشد!";
-    phoneWarning.classList.add("show");
-    clearTimeout(phoneWarning._t);
-    phoneWarning._t = setTimeout(() => phoneWarning.classList.remove("show"), 2500);
-  }
-});
-
-// هنگام ارسال فرم
-$("signupForm").onsubmit = e => {
-  e.preventDefault();
-
-  const phoneVal = phoneInput.value;
-
-  if (phoneVal.length < 11) {
-    phoneInput.focus();
-    return;
-  }
-
-  // شماره کامل آماده ارسال
-  const finalPhone = phoneVal.startsWith("09") ? phoneVal : "09" + phoneVal;
-
-  const pass = $("password").value.trim();
-  const cpass = $("confirmPassword").value.trim();
-
-  if (pass !== cpass) {
-    showToast("error", "رمز عبور و تکرار آن یکسان نیست!");
-    return;
-  }
-
-  // مقدار نهایی شماره را جایگزین فرم
-  phoneInput.value = finalPhone;
-
-  submitForm(e.target);  // ارسال فرم به webhook
-};
-const emailInput = document.getElementById("email");
-const emailWarning = document.getElementById("emailWarning"); // کنار فیلد
-
-// تابع لرزش
-function shakeField(field) {
-  field.classList.remove("input-error");
-  void field.offsetWidth;  // trigger reflow
-  field.classList.add("input-error");
-}
-
-// چک کردن فرمت ایمیل
-function isValidEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-// تابع اعتبارسنجی ایمیل
-function validateEmail(showWarning = true) {
-  let val = emailInput.value;
-
-  // حذف حروف و اعداد فارسی
-  const persianChars = /[آ-ی۰-۹]/g;
-  if (persianChars.test(val)) {
-    val = val.replace(persianChars, "");
-    emailInput.value = val;
-
-    if (showWarning) {
-      shakeField(emailInput);
-
-      // هشدار کنار فیلد
-      emailWarning.textContent = "لطفاً فقط حروف و اعداد انگلیسی وارد کنید!";
-      emailWarning.classList.add("show");
-      clearTimeout(emailWarning._t);
-      emailWarning._t = setTimeout(() => emailWarning.classList.remove("show"), 2500);
-    }
-  }
-
-  return true;
-}
-
-// هنگام تایپ
-emailInput.addEventListener("input", () => {
-  validateEmail(true);
-});
-
-// هنگام خروج از فیلد
-emailInput.addEventListener("blur", () => {
-  const val = emailInput.value.trim();
-  validateEmail(false); // فقط پاکسازی حروف فارسی
-
-  if (val && !isValidEmail(val)) {
-    shakeField(emailInput);
-
-    // هشدار کنار فیلد
-    emailWarning.textContent = "فرمت ایمیل صحیح نیست!";
-    emailWarning.classList.add("show");
-    clearTimeout(emailWarning._t);
-    emailWarning._t = setTimeout(() => emailWarning.classList.remove("show"), 2500);
-  }
-});
-const passwordInput = document.getElementById("password");
-const confirmInput = document.getElementById("confirmPassword");
-const passwordWarning = document.getElementById("passwordWarning");
-const confirmWarning = document.getElementById("confirmPasswordWarning");
-
-// تابع لرزش
-function shakeField(field) {
-  field.classList.remove("input-error");
-  void field.offsetWidth;
-  field.classList.add("input-error");
-}
-
-// هنگام تایپ: فقط حذف حروف و اعداد فارسی
-passwordInput.addEventListener("input", () => {
-  const persianChars = /[آ-ی۰-۹]/g;
-  if (persianChars.test(passwordInput.value)) {
-    passwordInput.value = passwordInput.value.replace(persianChars, "");
-    shakeField(passwordInput);
-    passwordWarning.textContent = "فقط حروف و اعداد انگلیسی مجاز است!";
-    passwordWarning.classList.add("show");
-    clearTimeout(passwordWarning._t);
-    passwordWarning._t = setTimeout(() => passwordWarning.classList.remove("show"), 2500);
-  }
-});
-
-// هنگام خروج از فیلد یا ارسال فرم: چک کامل قوانین امنیتی
-function validatePasswordFull() {
-  const val = passwordInput.value.trim();
-  const rules = [
-    { regex: /.{8,}/, message: "حداقل ۸ کاراکتر وارد کنید" },
-    { regex: /[A-Z]/, message: "حداقل یک حرف بزرگ وارد کنید" },
-    { regex: /[0-9]/, message: "حداقل یک عدد وارد کنید" },
-    { regex: /[!@#$%^&*(),.?":{}|<>]/, message: "حداقل یک کاراکتر ویژه وارد کنید" }
-  ];
-
-  for (let rule of rules) {
-    if (!rule.regex.test(val)) {
-      shakeField(passwordInput);
-      passwordWarning.textContent = rule.message;
-      passwordWarning.classList.add("show");
-      clearTimeout(passwordWarning._t);
-      passwordWarning._t = setTimeout(() => passwordWarning.classList.remove("show"), 2500);
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// هنگام خروج از فیلد
-passwordInput.addEventListener("blur", validatePasswordFull);
-
-// اعتبارسنجی تکرار پسورد
-confirmInput.addEventListener("blur", () => {
-  if (confirmInput.value && confirmInput.value !== passwordInput.value) {
-    shakeField(confirmInput);
-    confirmWarning.textContent = "تکرار رمز عبور با رمز عبور مطابقت ندارد!";
-    confirmWarning.classList.add("show");
-    clearTimeout(confirmWarning._t);
-    confirmWarning._t = setTimeout(() => confirmWarning.classList.remove("show"), 2500);
-  }
-});
-const loginPhone = document.getElementById("login_phone");
-const loginPhoneWarning = document.getElementById("loginPhoneWarning");
-
-loginPhone.addEventListener("focus", () => {
-  if (!loginPhone.value.startsWith("09")) loginPhone.value = "09";
-  setTimeout(() => loginPhone.setSelectionRange(2, 2), 0);
-});
-
-function validateLoginPhone(showWarning = true) {
-  let val = loginPhone.value;
-
-  if (!val.startsWith("09")) val = "09" + val.replace(/^0+/, "");
-  val = val.replace(/[^0-9]/g, "");
-  loginPhone.value = val;
-
-  if (val.length > 11) {
-    if (showWarning) {
-      loginPhone.classList.add("input-error");
-      loginPhoneWarning.textContent = "شماره نمی‌تواند بیشتر از ۱۱ رقم باشد!";
-      loginPhoneWarning.classList.add("show");
-      clearTimeout(loginPhoneWarning._t);
-      loginPhoneWarning._t = setTimeout(() => loginPhoneWarning.classList.remove("show"), 2500);
-    }
-    loginPhone.value = val.slice(0, 11);
-    setTimeout(() => loginPhone.setSelectionRange(loginPhone.value.length, loginPhone.value.length), 0);
-    return false;
-  }
-  return true;
-}
-
-loginPhone.addEventListener("input", () => validateLoginPhone(true));
-loginPhone.addEventListener("blur", () => {
-  if (loginPhone.value.length < 11) {
-    loginPhone.classList.add("input-error");
-    loginPhoneWarning.textContent = "شماره باید 11 رقم باشد!";
-    loginPhoneWarning.classList.add("show");
-    clearTimeout(loginPhoneWarning._t);
-    loginPhoneWarning._t = setTimeout(() => loginPhoneWarning.classList.remove("show"), 2500);
-  }
-});
-const loginPassword = document.getElementById("login_password");
-const loginPasswordWarning = document.getElementById("loginPasswordWarning");
-
-// تابع لرزش
-function shakeField(field) {
-  field.classList.remove("input-error");
-  void field.offsetWidth;
-  field.classList.add("input-error");
-}
-
-// اعتبارسنجی پسورد
-function validateLoginPassword(showWarning = true) {
-  const val = loginPassword.value;
-
-  // حذف حروف و اعداد فارسی
-  const persianChars = /[آ-ی۰-۹]/g;
-  if (persianChars.test(val)) {
-    loginPassword.value = val.replace(persianChars, "");
-    if (showWarning) {
-      shakeField(loginPassword);
-      loginPasswordWarning.textContent = "لطفاً فقط حروف و اعداد انگلیسی وارد کنید!";
-      loginPasswordWarning.classList.add("show");
-      clearTimeout(loginPasswordWarning._t);
-      loginPasswordWarning._t = setTimeout(() => loginPasswordWarning.classList.remove("show"), 2500);
-    }
-    return false;
-  }
-
-  // قوانین امنیتی
-  const rules = [
-    { regex: /.{8,}/, msg: "رمز عبور باید حداقل ۸ کاراکتر باشد" },
-    { regex: /[A-Z]/, msg: "رمز عبور باید حداقل یک حرف بزرگ داشته باشد" },
-    { regex: /[0-9]/, msg: "رمز عبور باید حداقل یک عدد داشته باشد" },
-    { regex: /[!@#$%^&*(),.?":{}|<>]/, msg: "رمز عبور باید حداقل یک کاراکتر ویژه داشته باشد" },
-  ];
-
-  for (let rule of rules) {
-    if (!rule.regex.test(val)) {
-      if (showWarning) {
-        shakeField(loginPassword);
-        loginPasswordWarning.textContent = rule.msg;
-        loginPasswordWarning.classList.add("show");
-        clearTimeout(loginPasswordWarning._t);
-        loginPasswordWarning._t = setTimeout(() => loginPasswordWarning.classList.remove("show"), 2500);
-      }
-      return false;
-    }
-  }
-
-  return true;
-}
-
-// هنگام خروج از فیلد
-loginPassword.addEventListener("blur", () => validateLoginPassword(true));
-
-</script>
-
-</body>
-</html>
++<!doctype html>
++<html lang="fa" dir="rtl">
++  <head>
++    <meta charset="UTF-8" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>فروش اکانت</title>
++    <style>
++      :root {
++        color-scheme: light;
++        font-family: "Vazirmatn", "Segoe UI", Tahoma, sans-serif;
++        --primary: #3b82f6;
++        --secondary: #14b8a6;
++        --ink: #0f172a;
++        --muted: #64748b;
++        --card: rgba(255, 255, 255, 0.92);
++      }
++
++      * {
++        box-sizing: border-box;
++      }
++
++      body {
++        margin: 0;
++        min-height: 100vh;
++        background: radial-gradient(circle at top, #e0f2fe, #f8fafc 55%, #f1f5f9);
++        display: flex;
++        justify-content: center;
++        align-items: center;
++        padding: clamp(20px, 4vw, 40px) clamp(16px, 6vw, 56px);
++      }
++
++      .card {
++        width: min(480px, 100%);
++        background: var(--card);
++        backdrop-filter: blur(12px);
++        border-radius: clamp(20px, 3vw, 28px);
++        box-shadow:
++          0 24px 50px rgba(15, 23, 42, 0.12),
++          inset 0 0 0 1px rgba(148, 163, 184, 0.3);
++        padding: clamp(24px, 5vw, 36px);
++      }
++
++      .heading {
++        display: grid;
++        gap: 6px;
++        text-align: center;
++        margin-bottom: clamp(20px, 4vw, 28px);
++      }
++
++      h1 {
++        margin: 0;
++        font-size: clamp(1.2rem, 2.8vw, 1.6rem);
++        color: var(--ink);
++      }
++
++      .subtitle {
++        margin: 0;
++        font-size: clamp(0.9rem, 2.4vw, 1rem);
++        color: var(--muted);
++      }
++
++      .menu {
++        display: grid;
++        gap: clamp(10px, 3vw, 14px);
++      }
++
++      .menu button {
++        border: none;
++        padding: clamp(12px, 3vw, 16px) clamp(14px, 4vw, 18px);
++        border-radius: clamp(12px, 3vw, 16px);
++        font-size: clamp(0.95rem, 2.6vw, 1.05rem);
++        background: #ffffff;
++        color: var(--ink);
++        text-align: right;
++        cursor: pointer;
++        display: flex;
++        align-items: center;
++        justify-content: space-between;
++        gap: 12px;
++        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
++        transition: transform 0.2s ease, box-shadow 0.2s ease;
++      }
++
++      .menu button:hover {
++        transform: translateY(-2px);
++        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
++      }
++
++      .menu button:active {
++        transform: translateY(0);
++      }
++
++      .menu button span:first-child {
++        display: inline-flex;
++        align-items: center;
++        justify-content: center;
++        width: clamp(38px, 8vw, 46px);
++        height: clamp(38px, 8vw, 46px);
++        border-radius: 12px;
++        background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(20, 184, 166, 0.18));
++        font-size: clamp(1.05rem, 3vw, 1.2rem);
++      }
++
++      .menu button span:last-child {
++        flex: 1;
++      }
++    </style>
++  </head>
++  <body>
++    <main class="card">
++      <header class="heading">
++        <h1>به فروشگاه ربات تلگرام خوش آمدید</h1>
++        <p class="subtitle">همه خدمات موردنیاز خود را سریع و امن دریافت کنید.</p>
++      </header>
++      <div class="menu">
++        <button type="button">
++          <span aria-hidden="true">👤</span>
++          <span>اکانت&nbsp;های من</span>
++        </button>
++        <button type="button">
++          <span aria-hidden="true">🛒</span>
++          <span>خرید اکانت</span>
++        </button>
++        <button type="button">
++          <span aria-hidden="true">⛱</span>
++          <span>حمایت</span>
++        </button>
++        <button type="button">
++          <span aria-hidden="true">🆘</span>
++          <span>پشتیبانی</span>
++        </button>
++        <button type="button">
++          <span aria-hidden="true">📜</span>
++          <span>شرایط و ضوابط</span>
++        </button>
++      </div>
++    </main>
++  </body>
++</html>
